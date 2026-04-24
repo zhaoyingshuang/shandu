@@ -1,0 +1,7 @@
+.DS_Store
+*.zip
+keys.txt
+tools/
+.wrangler/
+worker/
+popup/valid-hashes.js

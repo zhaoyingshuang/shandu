@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 网页摘要</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <header class="header">
+      <h1>闪读</h1>
+      <div class="header-btns">
+        <span id="usageCounter" class="usage-counter"></span>
+        <button id="proBtn" class="pro-badge" title="升级 Pro">PRO</button>
+        <button id="historyBtn" class="icon-btn" title="历史记录">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6.5h12M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="13" cy="10" r="2.5" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button id="settingsBtn" class="icon-btn" title="设置">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主界面 -->
+    <main id="mainView">
+      <!-- 摘要模式选择 -->
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="brief">简短</button>
+        <button class="mode-btn" data-mode="detailed">详细</button>
+        <button class="mode-btn" data-mode="keypoints">要点</button>
+        <button class="mode-btn" data-mode="timeline">时间线</button>
+      </div>
+
+      <!-- 摘要按钮 -->
+      <button id="summarizeBtn" class="primary-btn">
+        <span class="btn-text">生成摘要</span>
+        <span class="btn-loading hidden">⏳ 分析中...</span>
+      </button>
+
+      <!-- 摘要结果 -->
+      <div id="resultContainer" class="result-container hidden">
+        <div class="result-header">
+          <span id="pageTitle" class="page-title"></span>
+        </div>
+
+        <div class="result-section">
+          <h3>📌 核心观点</h3>
+          <ul id="keyPoints" class="key-points"></ul>
+        </div>
+
+        <div class="result-section" id="dataSection">
+          <h3>📊 关键数据</h3>
+          <ul id="keyData" class="key-data"></ul>
+        </div>
+
+        <div class="result-section" id="actionSection">
+          <h3>💡 行动建议</h3>
+          <ul id="actions" class="actions"></ul>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+          <button id="copyBtn" class="action-btn">📋 复制</button>
+          <button id="exportBtn" class="action-btn">📄 导出</button>
+          <button id="regenerateBtn" class="action-btn">🔄 重新生成</button>
+        </div>
+
+        <!-- 翻译区域 -->
+        <div class="translate-section">
+          <div class="translate-bar">
+            <select id="translateTarget" class="translate-select">
+              <option value="zh">翻译为中文</option>
+              <option value="en">翻译为 English</option>
+              <option value="ja">翻译为日本語</option>
+              <option value="ko">翻译为한국어</option>
+              <option value="fr">翻译为 Français</option>
+              <option value="de">翻译为 Deutsch</option>
+            </select>
+            <button id="translateBtn" class="translate-btn">🌐 翻译摘要</button>
+          </div>
+          <div id="translateResult" class="translate-result hidden">
+            <div class="translate-result-header">
+              <span id="translateLang" class="translate-lang"></span>
+              <button id="toggleOriginalBtn" class="toggle-btn">查看原文</button>
+            </div>
+            <ul id="translatedPoints" class="key-points"></ul>
+            <ul id="translatedData" class="key-data hidden"></ul>
+            <ul id="translatedActions" class="actions hidden"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 错误提示 -->
+      <div id="errorContainer" class="error-container hidden">
+        <p id="errorMessage"></p>
+      </div>
+    </main>
+
+    <!-- 历史记录界面 -->
+    <div id="historyView" class="hidden">
+      <div class="settings-header">
+        <button id="backFromHistoryBtn" class="icon-btn" title="返回">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h2>历史记录</h2>
+        <button id="clearHistoryBtn" class="icon-btn danger" title="清空历史">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6 4V2.5h4V4M5 4v8.5h6V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 7v3.5M9 7v3.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div id="historyList" class="history-list">
+        <p class="empty-state">暂无历史记录</p>
+      </div>
+    </div>
+
+    <!-- 设置界面 -->
+    <div id="settingsView" class="hidden">
+      <div class="settings-header">
+        <button id="backBtn" class="icon-btn" title="返回">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h2>设置</h2>
+      </div>
+
+      <div class="settings-form">
+        <div class="form-group">
+          <label for="apiKey">API Key</label>
+          <input type="password" id="apiKey" placeholder="sk-...">
+          <small>支持 OpenAI / Claude / DeepSeek 等 API Key</small>
+        </div>
+
+        <div class="form-group">
+          <label for="apiProvider">API 提供商</label>
+          <select id="apiProvider">
+            <optgroup label="🇨🇳 国内免费模型">
+              <option value="deepseek">DeepSeek (推荐)</option>
+              <option value="qwen">通义千问 (阿里)</option>
+              <option value="glm">智谱 GLM-4</option>
+              <option value="kimi">Kimi (月之暗面)</option>
+              <option value="yi">零一万物 (Yi)</option>
+            </optgroup>
+            <optgroup label="🌍 海外模型">
+              <option value="openai">OpenAI (GPT-4o)</option>
+              <option value="openai-gpt35">OpenAI (GPT-3.5)</option>
+              <option value="claude">Claude</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="language">摘要语言</label>
+          <select id="language">
+            <option value="auto">自动检测</option>
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <button id="saveSettingsBtn" class="primary-btn">保存设置</button>
+
+        <div class="help-section">
+          <div class="help-toggle" id="helpToggle">如何获取 API Key？ ▼</div>
+          <div id="helpContent" class="help-content hidden">
+            <div class="help-item">
+              <strong>DeepSeek（推荐）</strong>
+              <p>1. 打开 <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
+              <p>2. 注册登录 → API Keys → 创建 API Key</p>
+              <p class="help-free">免费：注册送 10 元（约 2000 万 tokens）</p>
+            </div>
+            <div class="help-item">
+              <strong>通义千问（阿里）</strong>
+              <p>1. 打开 <a href="https://bailian.console.aliyun.com" target="_blank">百炼控制台</a></p>
+              <p>2. 开通服务 → API-KEY 管理 → 创建</p>
+              <p class="help-free">免费：100 万 tokens/月</p>
+            </div>
+            <div class="help-item">
+              <strong>智谱 GLM-4</strong>
+              <p>1. 打开 <a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
+              <p>2. 注册 → 个人中心 → API Keys → 创建</p>
+              <p class="help-free">免费：GLM-4-Flash 无限期免费</p>
+            </div>
+            <div class="help-item">
+              <strong>Kimi（月之暗面）</strong>
+              <p>1. 打开 <a href="https://platform.moonshot.cn" target="_blank">platform.moonshot.cn</a></p>
+              <p>2. 注册 → API Keys → 创建</p>
+              <p class="help-free">免费：注册送 15 元</p>
+            </div>
+            <div class="help-item">
+              <strong>零一万物（Yi）</strong>
+              <p>1. 打开 <a href="https://platform.lingyiwanwu.com" target="_blank">platform.lingyiwanwu.com</a></p>
+              <p>2. 注册 → API Keys → 创建</p>
+              <p class="help-free">免费：Yi-Lightning 免费</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro 升级界面 -->
+    <div id="proView" class="hidden">
+      <div class="settings-header">
+        <button id="backFromProBtn" class="icon-btn" title="返回">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h2>升级 Pro</h2>
+      </div>
+
+      <div class="pro-view-content">
+        <div class="pro-hero">
+          <div class="pro-hero-icon">PRO</div>
+          <div class="pro-hero-title">解锁全部功能</div>
+          <div class="pro-hero-price">¥49 <span>永久买断</span></div>
+        </div>
+
+        <ul class="pro-features">
+          <li>无限次摘要</li>
+          <li>4 种摘要模式（要点 + 时间线）</li>
+          <li>6 种语言翻译</li>
+          <li>导出 Markdown</li>
+          <li>所有 AI 模型支持</li>
+        </ul>
+
+        <a id="buyLink" href="https://www.zaofaka.com/details/EAE2DA14" target="_blank" class="primary-btn pro-buy-btn">
+          购买激活码（¥49 自动发货）
+        </a>
+        <p class="pro-buy-tip">支付宝/微信付款后，系统自动发送激活码到邮箱</p>
+
+        <div class="pro-input-section">
+          <div class="pro-input-divider"><span>已有激活码？</span></div>
+          <input type="text" id="proKeyInput" placeholder="SD-XXXX-XXXX-XXXX" maxlength="20">
+          <button id="activateBtn" class="primary-btn">激活 Pro</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+      <span id="statusText">⚡ 准备就绪 | 快捷键: Ctrl+Shift+S</span>
+    </footer>
+  </div>
+
+  <script src="valid-hashes.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

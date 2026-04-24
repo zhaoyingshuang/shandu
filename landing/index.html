@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>闪读 - AI 网页摘要插件 | 3秒看懂任何网页</title>
+  <meta name="description" content="闪读是一款Chrome浏览器插件，一键用AI总结网页内容，3秒获取核心观点。支持DeepSeek、通义千问等国内免费模型。">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a14;
+      --card: rgba(25, 25, 45, 0.6);
+      --border: rgba(100, 100, 160, 0.15);
+      --accent: #667eea;
+      --accent2: #764ba2;
+      --text: #e0e0e0;
+      --text2: #999;
+      --text3: #555;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== 导航 ===== */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 20, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 32px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-badge span { color: var(--accent); font-weight: 600; }
+
+    .hero h1 {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: var(--text2);
+      max-width: 560px;
+      margin-bottom: 40px;
+    }
+
+    .hero-buttons { display: flex; gap: 16px; margin-bottom: 48px; }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      color: var(--text3);
+      font-size: 14px;
+    }
+
+    .hero-stats strong {
+      display: block;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    /* ===== 功能 ===== */
+    .features {
+      padding: 100px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 60px;
+      letter-spacing: -1px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(102, 126, 234, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ===== 截图预览 ===== */
+    .preview {
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    .preview-mockup {
+      max-width: 720px;
+      margin: 40px auto 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(12px);
+    }
+
+    .mockup-header {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .mockup-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text3);
+    }
+
+    .mockup-dot:nth-child(1) { background: #ef4444; }
+    .mockup-dot:nth-child(2) { background: #f59e0b; }
+    .mockup-dot:nth-child(3) { background: #22c55e; }
+
+    .mockup-content {
+      background: rgba(15, 15, 30, 0.5);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: left;
+    }
+
+    .mockup-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .mockup-line {
+      height: 8px;
+      background: rgba(100, 100, 160, 0.15);
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .mockup-line:last-child { width: 60%; }
+
+    .mockup-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .mockup-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .mockup-text {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+
+    /* ===== 定价 ===== */
+    .pricing {
+      padding: 100px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(12px);
+      position: relative;
+    }
+
+    .pricing-card.popular {
+      border-color: var(--accent);
+    }
+
+    .pricing-card.popular::before {
+      content: '推荐';
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+
+    .pricing-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .pricing-desc {
+      font-size: 14px;
+      color: var(--text2);
+      margin-bottom: 20px;
+    }
+
+    .pricing-price {
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .pricing-price span {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text2);
+    }
+
+    .pricing-note {
+      font-size: 12px;
+      color: var(--text3);
+      margin-bottom: 24px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+
+    .pricing-features li {
+      padding: 6px 0;
+      font-size: 14px;
+      color: var(--text2);
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    /* ===== FAQ ===== */
+    .faq {
+      padding: 80px 24px 100px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+
+    .faq-q {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .faq-a {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: var(--text2);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 40px; }
+      .hero p { font-size: 16px; }
+      .hero-buttons { flex-direction: column; }
+      .hero-stats { gap: 24px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 导航 -->
+  <nav>
+    <div class="nav-logo">闪读</div>
+    <div class="nav-links">
+      <a href="#features">功能</a>
+      <a href="#pricing">定价</a>
+      <a href="#faq">常见问题</a>
+      <a href="#install" class="btn btn-primary">安装插件</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">v1.2 · 支持 DeepSeek / 通义千问 / Kimi 等</div>
+    <h1>3秒看懂<br>任何网页</h1>
+    <p>闪读是一款 Chrome 插件，一键用 AI 总结网页内容。4种摘要模式，6种语言翻译，用国内免费模型，无需翻墙。</p>
+    <div class="hero-buttons">
+      <a href="#install" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 7l4 4 4-4M2 13h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        免费安装
+      </a>
+      <a href="#features" class="btn btn-outline">了解功能</a>
+    </div>
+    <div class="hero-stats">
+      <div><strong>4</strong>种摘要模式</div>
+      <div><strong>6</strong>种语言翻译</div>
+      <div><strong>5+</strong>国内免费模型</div>
+    </div>
+  </section>
+
+  <!-- 功能 -->
+  <section class="features" id="features">
+    <div class="section-label">功能特性</div>
+    <h2 class="section-title">你需要的一切，都在这里</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>4种摘要模式</h3>
+        <p>简速浏览、深度分析、要点提取、时间线梳理，按需选择最适合的模式。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>多语言翻译</h3>
+        <p>支持中、英、日、韩、法、德 6 种语言，摘要结果一键翻译。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🇨🇳</div>
+        <h3>国内免费模型</h3>
+        <p>内置 DeepSeek、通义千问、智谱、Kimi、零一万物，免费额度充足。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⌨️</div>
+        <h3>快捷键操作</h3>
+        <p>Ctrl+Shift+S 一键唤起，右键菜单快速摘要选中文字，不打断阅读。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📜</div>
+        <h3>历史记录</h3>
+        <p>自动保存最近 20 条摘要，随时回看，支持导出为 Markdown。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>隐私安全</h3>
+        <p>API Key 本地存储，数据不经过任何第三方服务器，完全掌控在自己手中。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 预览 -->
+  <section class="preview" id="install">
+    <div class="section-label">产品预览</div>
+    <h2 class="section-title">简洁优雅，开箱即用</h2>
+    <div class="preview-mockup">
+      <div class="mockup-header">
+        <div class="mockup-dot"></div>
+        <div class="mockup-dot"></div>
+        <div class="mockup-dot"></div>
+      </div>
+      <div class="mockup-content">
+        <div class="mockup-title">📌 核心观点</div>
+        <div class="mockup-point">
+          <div class="mockup-bullet"></div>
+          <div class="mockup-text">该研究提出了一种新的注意力机制，在保持模型性能的同时将计算成本降低了40%</div>
+        </div>
+        <div class="mockup-point">
+          <div class="mockup-bullet"></div>
+          <div class="mockup-text">实验结果显示，在标准基准测试中，新方法达到了 SOTA 水平</div>
+        </div>
+        <div class="mockup-point">
+          <div class="mockup-bullet"></div>
+          <div class="mockup-text">作者建议未来可以将该方法扩展到多模态任务中</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 定价 -->
+  <section class="pricing" id="pricing">
+    <div class="section-label">定价方案</div>
+    <h2 class="section-title">先免费试用，满意再付费</h2>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>免费版</h3>
+        <p class="pricing-desc">体验核心功能</p>
+        <div class="pricing-price">¥0</div>
+        <div class="pricing-note">永久免费</div>
+        <ul class="pricing-features">
+          <li>每天 5 次摘要</li>
+          <li>2 种摘要模式</li>
+          <li>国内免费模型</li>
+          <li>历史记录</li>
+        </ul>
+        <a href="#" class="btn btn-outline" style="width:100%;justify-content:center;">免费开始</a>
+      </div>
+      <div class="pricing-card popular">
+        <h3>Pro 专业版</h3>
+        <p class="pricing-desc">解锁全部功能</p>
+        <div class="pricing-price">¥49 <span>/永久</span></div>
+        <div class="pricing-note">一次买断，永久使用</div>
+        <ul class="pricing-features">
+          <li>无限次摘要</li>
+          <li>4 种摘要模式</li>
+          <li>6 种语言翻译</li>
+          <li>所有 AI 模型</li>
+          <li>导出 Markdown</li>
+          <li>优先技术支持</li>
+        </ul>
+        <a href="https://www.zaofaka.com/details/EAE2DA14" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;">立即升级</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="section-label">常见问题</div>
+    <h2 class="section-title">有问题？看这里</h2>
+    <div class="faq-item">
+      <div class="faq-q">需要翻墙吗？</div>
+      <div class="faq-a">不需要。闪读支持 DeepSeek、通义千问、智谱、Kimi、零一万物等国内模型，注册即可免费使用。当然也支持 OpenAI 和 Claude。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">API Key 安全吗？</div>
+      <div class="faq-a">绝对安全。API Key 只保存在你浏览器的本地存储中，不会上传到任何服务器。所有 API 调用都是直接从你的浏览器发出。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">免费额度够用吗？</div>
+      <div class="faq-a">DeepSeek 注册即送 500 万 tokens，足够每天使用。通义千问、智谱等也有百万级免费额度。日常使用完全够用。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Pro 版和免费版有什么区别？</div>
+      <div class="faq-a">Pro 版解锁无限次摘要、全部 4 种摘要模式、6 种语言翻译、导出 Markdown 等高级功能。免费版每天限 5 次，仅支持 2 种模式。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">支持哪些浏览器？</div>
+      <div class="faq-a">目前支持 Chrome 浏览器。Edge 用户也可以安装（基于 Chromium）。后续会考虑 Firefox 支持。</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 闪读 · 用 AI 让阅读更高效</p>
+    <p style="margin-top:8px;"><a href="mailto:hello@shandu.app">联系我们</a> · <a href="#">隐私政策</a></p>
+  </footer>
+
+</body>
+</html>
