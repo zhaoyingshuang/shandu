@@ -5,3 +5,4 @@ tools/
 .wrangler/
 worker/
 popup/valid-hashes.js
+fc/node_modules/

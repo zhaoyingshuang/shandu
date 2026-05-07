@@ -10,9 +10,14 @@ class AIWebSummary {
     this.settings = null;
     this.MAX_HISTORY = 20;
     this.FREE_DAILY_LIMIT = 5;
+    this.PROXY_DAILY_LIMIT = 10;
     this.isPro = false;
     this.todayUsage = 0;
+    this.proxyUsage = 0;
+    this.totalUsage = 0;
+    this.reviewDismissed = false;
     this.cachedSummaries = {};
+    this.WORKER_URL = 'https://shandu-activate-odanpwlbmw.cn-hangzhou.fcapp.run';
 
     this.init();
   }
@@ -30,11 +35,28 @@ class AIWebSummary {
     // 更新状态
     this.updateStatus();
 
+    // 检查是否首次使用，显示引导
+    await this.checkOnboarding();
+
     // 检查是否自动摘要
     await this.checkAutoSummarize();
 
     // 检查是否有右键翻译请求
     await this.checkPendingTranslate();
+  }
+
+  async checkOnboarding() {
+    const result = await chrome.storage.local.get(['onboarded']);
+    if (!result.onboarded) {
+      this.hideAllViews();
+      document.getElementById('onboardingView').classList.remove('hidden');
+    }
+  }
+
+  async dismissOnboarding() {
+    await chrome.storage.local.set({ onboarded: true });
+    document.getElementById('onboardingView').classList.add('hidden');
+    document.getElementById('mainView').classList.remove('hidden');
   }
 
   bindEvents() {
@@ -88,6 +110,12 @@ class AIWebSummary {
     });
     document.getElementById('backFromProBtn').addEventListener('click', () => this.hideProView());
     document.getElementById('activateBtn').addEventListener('click', () => this.activatePro());
+
+    // Onboarding
+    document.getElementById('onboardingStartBtn').addEventListener('click', () => this.dismissOnboarding());
+
+    // Review prompt
+    document.getElementById('reviewDismissBtn').addEventListener('click', () => this.dismissReview());
   }
 
   selectMode(mode) {
@@ -130,7 +158,7 @@ class AIWebSummary {
   }
 
   async loadProStatus() {
-    const result = await chrome.storage.local.get(['proKey', 'dailyUsage', 'usageDate']);
+    const result = await chrome.storage.local.get(['proKey', 'dailyUsage', 'usageDate', 'proxyUsage', 'proxyUsageDate', 'totalUsage', 'reviewDismissed']);
     this.isPro = !!result.proKey;
 
     // 检查是否新的一天，重置计数
@@ -141,6 +169,16 @@ class AIWebSummary {
     } else {
       this.todayUsage = result.dailyUsage || 0;
     }
+
+    if (result.proxyUsageDate !== today) {
+      this.proxyUsage = 0;
+      await chrome.storage.local.set({ proxyUsage: 0, proxyUsageDate: today });
+    } else {
+      this.proxyUsage = result.proxyUsage || 0;
+    }
+
+    this.totalUsage = result.totalUsage || 0;
+    this.reviewDismissed = result.reviewDismissed || false;
 
     // 更新 UI
     this.updateProUI();
@@ -154,6 +192,13 @@ class AIWebSummary {
       proBtn.textContent = 'PRO';
       proBtn.classList.add('active');
       usageCounter.textContent = 'Pro · 无限使用';
+    } else if (!this.settings.apiKey) {
+      // 代理免费模式
+      const remaining = this.PROXY_DAILY_LIMIT - this.proxyUsage;
+      usageCounter.textContent = `免费模式: ${remaining}/${this.PROXY_DAILY_LIMIT}`;
+      if (remaining <= 0) {
+        usageCounter.style.color = '#f87171';
+      }
     } else {
       const remaining = this.FREE_DAILY_LIMIT - this.todayUsage;
       usageCounter.textContent = `今日剩余: ${remaining}/${this.FREE_DAILY_LIMIT}`;
@@ -188,13 +233,103 @@ class AIWebSummary {
     return true;
   }
 
-  async recordUsage() {
-    this.todayUsage++;
-    await chrome.storage.local.set({
-      dailyUsage: this.todayUsage,
-      usageDate: new Date().toDateString()
-    });
+  async recordUsage(isProxy = false) {
+    if (isProxy) {
+      this.proxyUsage++;
+      await chrome.storage.local.set({
+        proxyUsage: this.proxyUsage,
+        proxyUsageDate: new Date().toDateString()
+      });
+    } else {
+      this.todayUsage++;
+      await chrome.storage.local.set({
+        dailyUsage: this.todayUsage,
+        usageDate: new Date().toDateString()
+      });
+    }
+
+    // 累计总使用次数
+    this.totalUsage++;
+    await chrome.storage.local.set({ totalUsage: this.totalUsage });
+
     this.updateProUI();
+  }
+
+  checkProxyLimit() {
+    if (this.proxyUsage >= this.PROXY_DAILY_LIMIT) {
+      this.showError(`今日免费额度已用完（${this.PROXY_DAILY_LIMIT} 次）。配置自己的 API Key 可继续使用，或明天再来。`);
+      return false;
+    }
+    return true;
+  }
+
+  async callProxyAPI(content, title, url) {
+    const { language } = this.settings;
+
+    const languagePrompt = language === 'zh' ? '请用中文回答。'
+      : language === 'en' ? 'Please respond in English.'
+      : '请用文章的原始语言回答。';
+
+    const modeConfigs = {
+      brief: {
+        prompt: `你是一个内容摘要助手。请用极其简洁的方式总结这篇文章，总共不超过100字。${languagePrompt}\n\n请以 JSON 格式返回：\n{\n  "oneSentence": "一句话总结这篇文章的核心内容",\n  "keyPoints": ["最关键的2-3个观点，每个不超过15字"],\n  "reading": "这篇文章值不值得细读？为什么？（一句话）"\n}\n\n只返回 JSON，不要其他内容。`,
+        parse: (data) => ({
+          mode: 'brief',
+          keyPoints: data.keyPoints || [],
+          keyData: data.oneSentence ? [`📝 一句话：${data.oneSentence}`] : [],
+          actions: data.reading ? [`📖 ${data.reading}`] : []
+        })
+      },
+      detailed: {
+        prompt: `你是一个深度分析助手。请对这篇文章进行全面、深入的分析。${languagePrompt}\n\n请以 JSON 格式返回：\n{\n  "summary": "200字以内的完整摘要",\n  "arguments": [{"point": "核心论点", "evidence": "支撑论据"}],\n  "keyData": ["关键数据或事实，至少3个"],\n  "conclusion": "作者的最终结论",\n  "actions": ["读者可以采取的实际行动建议，至少2个"]\n}\n\n只返回 JSON，不要其他内容。`,
+        parse: (data) => ({
+          mode: 'detailed',
+          keyPoints: [
+            data.summary,
+            ...(data.arguments || []).map(a => `${a.point}：${a.evidence}`)
+          ],
+          keyData: data.keyData || [],
+          actions: [
+            ...(data.conclusion ? [`🎯 结论：${data.conclusion}`] : []),
+            ...(data.actions || [])
+          ]
+        })
+      }
+    };
+
+    const config = modeConfigs[this.currentMode] || modeConfigs.brief;
+    const systemPrompt = config.prompt;
+    const userPrompt = `文章标题：${title}\n文章链接：${url}\n\n文章内容：\n${content.substring(0, 8000)}`;
+
+    // 生成客户端 ID（基于安装时的随机 ID）
+    const stored = await chrome.storage.local.get(['clientId']);
+    let clientId = stored.clientId;
+    if (!clientId) {
+      clientId = crypto.randomUUID();
+      await chrome.storage.local.set({ clientId });
+    }
+
+    const response = await fetch(this.WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'proxy', clientId, systemPrompt, userPrompt }),
+      signal: AbortSignal.timeout(15000)
+    });
+
+    if (!response.ok) {
+      const result = await response.json();
+      throw new Error(result.error || '代理服务调用失败');
+    }
+
+    const result = await response.json();
+    const rawContent = result.content;
+
+    try {
+      const parsed = JSON.parse(rawContent);
+      return config.parse(parsed);
+    } catch {
+      return config.parse(rawContent);
+    }
   }
 
   async activatePro() {
@@ -235,7 +370,7 @@ class AIWebSummary {
     input.style.borderColor = '';
 
     try {
-      const resp = await fetch('https://shandu-api.z-yingshuang.workers.dev', {
+      const resp = await fetch('https://shandu-activate-odanpwlbmw.cn-hangzhou.fcapp.run', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'activate', keyHash: hash })
@@ -338,13 +473,14 @@ class AIWebSummary {
     document.getElementById('settingsView').classList.add('hidden');
     document.getElementById('historyView').classList.add('hidden');
     document.getElementById('proView').classList.add('hidden');
+    document.getElementById('onboardingView').classList.add('hidden');
   }
 
   updateStatus() {
     const statusText = document.getElementById('statusText');
     if (!this.settings.apiKey) {
-      statusText.textContent = '⚠️ 请先设置 API Key';
-      statusText.style.color = '#f59e0b';
+      statusText.textContent = '⚡ 免费模式 · 无需配置 | 快捷键: Ctrl+Shift+S';
+      statusText.style.color = '#666';
     } else {
       statusText.textContent = '⚡ 准备就绪 | 快捷键: Ctrl+Shift+S';
       statusText.style.color = '#666';
@@ -374,7 +510,7 @@ class AIWebSummary {
   async translateSummary() {
     if (!this.currentSummary) return;
     if (!this.settings.apiKey) {
-      this.showError('请先在设置中配置 API Key');
+      this.showError('翻译功能需要配置 API Key，请在设置中添加。');
       return;
     }
 
@@ -401,7 +537,7 @@ class AIWebSummary {
   // 右键翻译选中文字
   async translateText(text) {
     if (!this.settings.apiKey) {
-      this.showError('请先在设置中配置 API Key');
+      this.showError('翻译功能需要配置 API Key，请在设置中添加。');
       return;
     }
 
@@ -599,14 +735,13 @@ class AIWebSummary {
   }
 
   async summarize() {
-    // 检查 API Key
+    // 无 API Key 时走代理模式
     if (!this.settings.apiKey) {
-      this.showError('请先在设置中配置 API Key');
-      return;
+      if (!this.checkProxyLimit()) return;
+    } else {
+      // 有 API Key 时检查用量限制
+      if (!this.checkUsageLimit()) return;
     }
-
-    // 检查用量限制
-    if (!this.checkUsageLimit()) return;
 
     // 检查免费版模式限制
     if (!this.isPro && (this.currentMode === 'keypoints' || this.currentMode === 'timeline')) {
@@ -638,19 +773,25 @@ class AIWebSummary {
         url: response.url
       };
 
-      // 调用 API 生成摘要
-      const summary = await this.callAPI(response.content, response.title, response.url);
+      // 调用 API 生成摘要（无 API Key 时走代理）
+      const isProxy = !this.settings.apiKey;
+      const summary = isProxy
+        ? await this.callProxyAPI(response.content, response.title, response.url)
+        : await this.callAPI(response.content, response.title, response.url);
 
       // 显示结果
       this.showResult(summary);
       this.currentSummary = summary;
       this.cachedSummaries[this.currentMode] = summary;
 
+      // 检查是否显示好评引导
+      this.checkReviewPrompt();
+
       // 保存到历史记录
       await this.saveToHistory(summary, response.title, response.url);
 
       // 记录用量
-      await this.recordUsage();
+      await this.recordUsage(isProxy);
 
     } catch (error) {
       console.error('Summarize error:', error);
@@ -1067,6 +1208,7 @@ class AIWebSummary {
   hideResult() {
     document.getElementById('resultContainer').classList.add('hidden');
     document.getElementById('translateResult').classList.add('hidden');
+    document.getElementById('reviewPrompt').classList.add('hidden');
     this.translatedSummary = null;
     this.showingOriginal = true;
   }
@@ -1260,6 +1402,18 @@ class AIWebSummary {
     btn.disabled = loading;
     btnText.classList.toggle('hidden', loading);
     btnLoading.classList.toggle('hidden', !loading);
+  }
+
+  checkReviewPrompt() {
+    if (this.totalUsage >= 5 && !this.reviewDismissed) {
+      document.getElementById('reviewPrompt').classList.remove('hidden');
+    }
+  }
+
+  async dismissReview() {
+    this.reviewDismissed = true;
+    await chrome.storage.local.set({ reviewDismissed: true });
+    document.getElementById('reviewPrompt').classList.add('hidden');
   }
 
   showError(message) {

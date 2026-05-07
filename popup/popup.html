@@ -8,6 +8,39 @@
 </head>
 <body>
   <div class="container">
+    <!-- 新手引导 -->
+    <div id="onboardingView" class="hidden">
+      <div class="onboarding-content">
+        <div class="onboarding-icon">⚡</div>
+        <h2 class="onboarding-title">欢迎使用闪读</h2>
+        <p class="onboarding-desc">一键 AI 摘要，3 秒看懂任何网页</p>
+        <div class="onboarding-steps">
+          <div class="onboarding-step">
+            <span class="step-num">1</span>
+            <div>
+              <strong>零配置开箱即用</strong>
+              <p>无需填写 API Key，直接点击生成摘要</p>
+            </div>
+          </div>
+          <div class="onboarding-step">
+            <span class="step-num">2</span>
+            <div>
+              <strong>4 种摘要模式</strong>
+              <p>简短、详细、要点、时间线，按需选择</p>
+            </div>
+          </div>
+          <div class="onboarding-step">
+            <span class="step-num">3</span>
+            <div>
+              <strong>快捷键操作</strong>
+              <p>Ctrl+Shift+S 打开，Ctrl+Shift+A 快速摘要</p>
+            </div>
+          </div>
+        </div>
+        <button id="onboardingStartBtn" class="primary-btn">开始使用</button>
+      </div>
+    </div>
+
     <!-- 头部 -->
     <header class="header">
       <h1>闪读</h1>
@@ -65,6 +98,15 @@
           <button id="copyBtn" class="action-btn">📋 复制</button>
           <button id="exportBtn" class="action-btn">📄 导出</button>
           <button id="regenerateBtn" class="action-btn">🔄 重新生成</button>
+        </div>
+
+        <!-- 好评引导 -->
+        <div id="reviewPrompt" class="review-prompt hidden">
+          <p>闪读对你有帮助？给个好评支持一下吧</p>
+          <div class="review-prompt-btns">
+            <a id="reviewLink" href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc/reviews" target="_blank" class="review-btn review-btn-primary">去评价</a>
+            <button id="reviewDismissBtn" class="review-btn review-btn-dismiss">以后再说</button>
+          </div>
         </div>
 
         <!-- 翻译区域 -->
