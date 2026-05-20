@@ -163,12 +163,11 @@ body {
   font-weight: 600;
   padding: 2px 10px;
   border-radius: 4px;
-  pointer-events: none;
+  z-index: 1;
 }
 
 .pro-only > * {
   opacity: 0.3;
-  pointer-events: none;
 }
 
 .icon-btn {

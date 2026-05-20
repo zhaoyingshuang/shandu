@@ -121,7 +121,7 @@ class AIWebSummary {
   selectMode(mode) {
     // 免费版模式限制
     if (!this.isPro && (mode === 'keypoints' || mode === 'timeline')) {
-      this.showError('要点和时间线模式为 Pro 功能，升级后解锁。');
+      this.showProView();
       return;
     }
 
@@ -220,7 +220,11 @@ class AIWebSummary {
     // 免费版隐藏翻译
     if (!this.isPro) {
       const translateSection = document.querySelector('.translate-section');
-      if (translateSection) translateSection.classList.add('pro-only');
+      if (translateSection) {
+        translateSection.classList.add('pro-only');
+        translateSection.style.cursor = 'pointer';
+        translateSection.onclick = () => this.showProView();
+      }
     }
   }
 
@@ -313,7 +317,7 @@ class AIWebSummary {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'proxy', clientId, systemPrompt, userPrompt }),
-      signal: AbortSignal.timeout(15000)
+      signal: AbortSignal.timeout(60000)
     });
 
     if (!response.ok) {
@@ -509,6 +513,10 @@ class AIWebSummary {
   // 翻译摘要结果
   async translateSummary() {
     if (!this.currentSummary) return;
+    if (!this.isPro) {
+      this.showProView();
+      return;
+    }
     if (!this.settings.apiKey) {
       this.showError('翻译功能需要配置 API Key，请在设置中添加。');
       return;
@@ -745,7 +753,7 @@ class AIWebSummary {
 
     // 检查免费版模式限制
     if (!this.isPro && (this.currentMode === 'keypoints' || this.currentMode === 'timeline')) {
-      this.showError('要点和时间线模式为 Pro 功能，请升级解锁。');
+      this.showProView();
       return;
     }
 
@@ -758,10 +766,26 @@ class AIWebSummary {
       // 获取当前标签页
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-      // 向 content script 请求页面内容
-      const response = await chrome.tabs.sendMessage(tab.id, {
-        action: 'getPageContent'
-      });
+      if (!tab || !tab.id || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url === 'about:blank') {
+        throw new Error('当前页面不支持摘要，请在一个普通网页上使用');
+      }
+
+      // 尝试向 content script 请求页面内容，失败则注入 content script 后重试
+      let response;
+      try {
+        response = await chrome.tabs.sendMessage(tab.id, {
+          action: 'getPageContent'
+        });
+      } catch (e) {
+        // content script 未注入，手动注入后重试
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          files: ['content/content.js']
+        });
+        response = await chrome.tabs.sendMessage(tab.id, {
+          action: 'getPageContent'
+        });
+      }
 
       if (!response || !response.content) {
         throw new Error('无法获取页面内容');
@@ -795,7 +819,11 @@ class AIWebSummary {
 
     } catch (error) {
       console.error('Summarize error:', error);
-      this.showError(error.message || '生成摘要失败，请重试');
+      if (error.name === 'TimeoutError' || error.message?.includes('timed out')) {
+        this.showError('请求超时，AI 服务响应较慢，请稍后重试。');
+      } else {
+        this.showError(error.message || '生成摘要失败，请重试');
+      }
     } finally {
       this.setLoading(false);
     }
@@ -957,7 +985,7 @@ class AIWebSummary {
 
   // DeepSeek API
   async callDeepSeek(apiKey, systemPrompt, userPrompt) {
-    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    const response = await this.fetchWithTimeout('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -985,7 +1013,7 @@ class AIWebSummary {
 
   // 通义千问 API
   async callQwen(apiKey, systemPrompt, userPrompt) {
-    const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+    const response = await this.fetchWithTimeout('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1013,7 +1041,7 @@ class AIWebSummary {
 
   // 智谱 GLM-4 API
   async callGLM(apiKey, systemPrompt, userPrompt) {
-    const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+    const response = await this.fetchWithTimeout('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1041,7 +1069,7 @@ class AIWebSummary {
 
   // Kimi API
   async callKimi(apiKey, systemPrompt, userPrompt) {
-    const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+    const response = await this.fetchWithTimeout('https://api.moonshot.cn/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1069,7 +1097,7 @@ class AIWebSummary {
 
   // 零一万物 Yi API
   async callYi(apiKey, systemPrompt, userPrompt) {
-    const response = await fetch('https://api.lingyiwanwu.com/v1/chat/completions', {
+    const response = await this.fetchWithTimeout('https://api.lingyiwanwu.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1099,7 +1127,7 @@ class AIWebSummary {
   async callOpenAI(apiKey, provider, systemPrompt, userPrompt) {
     const model = provider === 'openai-gpt35' ? 'gpt-3.5-turbo' : 'gpt-4o';
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await this.fetchWithTimeout('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1127,7 +1155,7 @@ class AIWebSummary {
 
   // Claude API
   async callClaude(apiKey, systemPrompt, userPrompt) {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await this.fetchWithTimeout('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1151,6 +1179,14 @@ class AIWebSummary {
 
     const data = await response.json();
     return data.content[0].text;
+  }
+
+  async fetchWithTimeout(url, options, timeout = 60000) {
+    const response = await fetch(url, {
+      ...options,
+      signal: AbortSignal.timeout(timeout)
+    });
+    return response;
   }
 
   // 解析响应
@@ -1228,6 +1264,10 @@ class AIWebSummary {
 
   exportMarkdown() {
     if (!this.currentSummary || !this.currentPageInfo) return;
+    if (!this.isPro) {
+      this.showProView();
+      return;
+    }
 
     const markdown = this.formatSummaryForMarkdown(this.currentSummary, this.currentPageInfo);
 
