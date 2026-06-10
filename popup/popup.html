@@ -209,31 +209,31 @@
               <strong>DeepSeek（推荐）</strong>
               <p>1. 打开 <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
               <p>2. 注册登录 → API Keys → 创建 API Key</p>
-              <p class="help-free">免费：注册送 10 元（约 2000 万 tokens）</p>
+              <p class="help-free">注册即送体验额度</p>
             </div>
             <div class="help-item">
               <strong>通义千问（阿里）</strong>
               <p>1. 打开 <a href="https://bailian.console.aliyun.com" target="_blank">百炼控制台</a></p>
               <p>2. 开通服务 → API-KEY 管理 → 创建</p>
-              <p class="help-free">免费：100 万 tokens/月</p>
+              <p class="help-free">按量付费，低门槛</p>
             </div>
             <div class="help-item">
               <strong>智谱 GLM-4</strong>
               <p>1. 打开 <a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
               <p>2. 注册 → 个人中心 → API Keys → 创建</p>
-              <p class="help-free">免费：GLM-4-Flash 无限期免费</p>
+              <p class="help-free">注册即送体验额度</p>
             </div>
             <div class="help-item">
               <strong>Kimi（月之暗面）</strong>
               <p>1. 打开 <a href="https://platform.moonshot.cn" target="_blank">platform.moonshot.cn</a></p>
               <p>2. 注册 → API Keys → 创建</p>
-              <p class="help-free">免费：注册送 15 元</p>
+              <p class="help-free">注册即送体验额度</p>
             </div>
             <div class="help-item">
               <strong>零一万物（Yi）</strong>
               <p>1. 打开 <a href="https://platform.lingyiwanwu.com" target="_blank">platform.lingyiwanwu.com</a></p>
               <p>2. 注册 → API Keys → 创建</p>
-              <p class="help-free">免费：Yi-Lightning 免费</p>
+              <p class="help-free">按量付费，低门槛</p>
             </div>
           </div>
         </div>
@@ -253,24 +253,42 @@
         <div class="pro-hero">
           <div class="pro-hero-icon">PRO</div>
           <div class="pro-hero-title">解锁全部功能</div>
-          <div class="pro-hero-price">¥49 <span>永久买断</span></div>
+          <div class="pro-hero-price">¥29 <span>限时优惠 · 原价 ¥49</span></div>
         </div>
 
         <ul class="pro-features">
           <li>无限次摘要</li>
-          <li>4 种摘要模式（要点 + 时间线）</li>
+          <li>4 种摘要模式（详细 + 要点 + 时间线）</li>
           <li>6 种语言翻译</li>
           <li>导出 Markdown</li>
           <li>所有 AI 模型支持</li>
         </ul>
 
-        <a id="buyLink" href="https://www.zaofaka.com/details/EAE2DA14" target="_blank" class="primary-btn pro-buy-btn">
-          购买激活码（¥49 自动发货）
-        </a>
-        <p class="pro-buy-tip">支付宝/微信付款后，系统自动发送激活码到邮箱</p>
+        <div class="qr-pay-section">
+          <p class="qr-pay-title">扫码支付 ¥29</p>
+          <div class="qr-codes">
+            <div class="qr-item">
+              <img src="assets/alipay-qr.png" alt="支付宝" class="qr-img">
+              <span>支付宝</span>
+            </div>
+            <div class="qr-item">
+              <img src="assets/wechat-qr.png" alt="微信" class="qr-img">
+              <span>微信支付</span>
+            </div>
+          </div>
+          <div class="qr-contact">
+            <p class="qr-contact-title">付款后加微信，即刻获取激活码</p>
+            <div class="qr-contact-wechat">
+              <span class="wechat-label">微信号：</span>
+              <span class="wechat-id" id="wechatId">Yshuang0801</span>
+              <button class="copy-wechat-btn" id="copyWechatBtn" title="复制微信号">复制</button>
+            </div>
+            <p class="qr-contact-tip">加微信时备注「闪读Pro」，发支付截图即可</p>
+          </div>
+        </div>
 
         <div class="pro-input-section">
-          <div class="pro-input-divider"><span>已有激活码？</span></div>
+          <div class="pro-input-divider"><span>输入激活码</span></div>
           <input type="text" id="proKeyInput" placeholder="SD-XXXX-XXXX-XXXX" maxlength="20">
           <button id="activateBtn" class="primary-btn">激活 Pro</button>
         </div>

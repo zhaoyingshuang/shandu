@@ -805,7 +805,7 @@ body {
   margin-top: 4px;
 }
 
-.pro-pay-section {
+.qr-pay-section {
   text-align: center;
   padding: 16px;
   background: var(--bg-item);
@@ -813,50 +813,98 @@ body {
   border-radius: var(--radius);
 }
 
-.pro-pay-label {
-  font-size: 14px;
+.qr-pay-title {
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 12px;
 }
 
-.pro-qr-placeholder {
+.qr-codes {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 12px;
+}
+
+.qr-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.qr-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 4px;
+}
+
+.qr-item span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.qr-pay-tip {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.qr-contact {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.qr-contact-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-1);
+  margin-bottom: 8px;
+}
+
+.qr-contact-wechat {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 160px;
-  height: 160px;
-  margin: 0 auto 12px;
-  background: rgba(255,255,255,0.03);
-  border: 1px dashed var(--border);
-  border-radius: 8px;
+  gap: 6px;
+  margin-bottom: 6px;
 }
 
-.pro-qr-placeholder p {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-.pro-pay-hint {
-  font-size: 11px !important;
-  color: var(--text3) !important;
-}
-
-.pro-pay-tip {
+.wechat-label {
   font-size: 13px;
   color: var(--text-secondary);
-  margin-bottom: 4px;
 }
 
-.pro-pay-wechat {
+.wechat-id {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+  user-select: all;
+}
+
+.copy-wechat-btn {
+  padding: 2px 10px;
+  font-size: 12px;
+  color: var(--accent-1);
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-wechat-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+.qr-contact-tip {
   font-size: 12px;
   color: var(--text-muted);
-}
-
-.pro-pay-wechat span {
-  color: var(--accent-1);
-  font-weight: 600;
 }
 
 .pro-buy-tip {

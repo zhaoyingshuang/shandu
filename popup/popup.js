@@ -10,7 +10,7 @@ class AIWebSummary {
     this.settings = null;
     this.MAX_HISTORY = 20;
     this.FREE_DAILY_LIMIT = 5;
-    this.PROXY_DAILY_LIMIT = 10;
+    this.PROXY_DAILY_LIMIT = 3;
     this.isPro = false;
     this.todayUsage = 0;
     this.proxyUsage = 0;
@@ -111,6 +111,15 @@ class AIWebSummary {
     document.getElementById('backFromProBtn').addEventListener('click', () => this.hideProView());
     document.getElementById('activateBtn').addEventListener('click', () => this.activatePro());
 
+    // 复制微信号
+    document.getElementById('copyWechatBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText('Yshuang0801').then(() => {
+        const btn = document.getElementById('copyWechatBtn');
+        btn.textContent = '已复制';
+        setTimeout(() => { btn.textContent = '复制'; }, 1500);
+      });
+    });
+
     // Onboarding
     document.getElementById('onboardingStartBtn').addEventListener('click', () => this.dismissOnboarding());
 
@@ -120,7 +129,7 @@ class AIWebSummary {
 
   selectMode(mode) {
     // 免费版模式限制
-    if (!this.isPro && (mode === 'keypoints' || mode === 'timeline')) {
+    if (!this.isPro && mode !== 'brief') {
       this.showProView();
       return;
     }
@@ -210,7 +219,7 @@ class AIWebSummary {
     // 免费版锁定某些模式
     document.querySelectorAll('.mode-btn').forEach(btn => {
       const mode = btn.dataset.mode;
-      if (!this.isPro && (mode === 'keypoints' || mode === 'timeline')) {
+      if (!this.isPro && mode !== 'brief') {
         btn.classList.add('locked');
       } else {
         btn.classList.remove('locked');
@@ -261,7 +270,7 @@ class AIWebSummary {
 
   checkProxyLimit() {
     if (this.proxyUsage >= this.PROXY_DAILY_LIMIT) {
-      this.showError(`今日免费额度已用完（${this.PROXY_DAILY_LIMIT} 次）。配置自己的 API Key 可继续使用，或明天再来。`);
+      this.showError(`今日免费额度已用完（${this.PROXY_DAILY_LIMIT} 次）。升级 Pro 解锁无限使用。`);
       return false;
     }
     return true;
@@ -465,11 +474,28 @@ class AIWebSummary {
   showProView() {
     this.hideAllViews();
     document.getElementById('proView').classList.remove('hidden');
+    this.autoDetectClipboard();
   }
 
   hideProView() {
     this.hideAllViews();
     document.getElementById('mainView').classList.remove('hidden');
+  }
+
+  async autoDetectClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      const pattern = /^SD-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+      if (text && pattern.test(text.trim().toUpperCase())) {
+        const input = document.getElementById('proKeyInput');
+        input.value = text.trim().toUpperCase();
+        input.style.borderColor = '#667eea';
+        const btn = document.getElementById('activateBtn');
+        btn.style.boxShadow = '0 0 0 2px rgba(102, 126, 234, 0.4)';
+      }
+    } catch {
+      // 剪贴板权限被拒绝，静默忽略
+    }
   }
 
   hideAllViews() {
@@ -752,7 +778,7 @@ class AIWebSummary {
     }
 
     // 检查免费版模式限制
-    if (!this.isPro && (this.currentMode === 'keypoints' || this.currentMode === 'timeline')) {
+    if (!this.isPro && this.currentMode !== 'brief') {
       this.showProView();
       return;
     }
