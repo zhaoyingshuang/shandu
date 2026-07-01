@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shandu - Chrome Web Store Screenshots</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+      padding: 60px 20px;
+    }
+    .shot {
+      width: 1280px;
+      height: 800px;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* ============ Shot 1: Hero ============ */
+    .shot-1 {
+      background: radial-gradient(circle at 30% 20%, #302b63 0%, #0f0c29 60%);
+      display: flex;
+      flex-direction: column;
+      padding: 80px;
+    }
+    .shot-1::before {
+      content: '';
+      position: absolute;
+      top: -150px; right: -150px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+    }
+    .s1-content { flex: 1; display: flex; align-items: center; gap: 60px; position: relative; z-index: 1; }
+    .s1-text { flex: 1; }
+    .s1-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(102, 126, 234, 0.15);
+      border: 1px solid rgba(102, 126, 234, 0.4);
+      border-radius: 24px;
+      color: #a78bfa;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+    .s1-title {
+      font-size: 76px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+    }
+    .s1-title .accent {
+      background: linear-gradient(135deg, #667eea, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .s1-sub {
+      font-size: 24px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+    .s1-features {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .s1-feat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.85);
+      font-size: 17px;
+    }
+    .s1-feat-check {
+      width: 22px; height: 22px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Mock popup */
+    .mock-popup {
+      width: 380px;
+      background: linear-gradient(160deg, #15152a 0%, #1a1a3a 100%);
+      border: 1px solid rgba(100, 100, 160, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+    .mock-popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(100, 100, 160, 0.15);
+    }
+    .mock-logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .mock-badge {
+      padding: 4px 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    .mock-modes {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .mock-mode {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.5);
+      font-size: 13px;
+    }
+    .mock-mode.active {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25));
+      border-color: #667eea;
+      color: #fff;
+    }
+    .mock-section-title {
+      font-size: 13px;
+      color: #a78bfa;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .mock-point {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.5;
+    }
+    .mock-bullet {
+      width: 6px; height: 6px;
+      background: #667eea;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    /* ============ Shot 2: 4 Modes ============ */
+    .shot-2 {
+      background: linear-gradient(160deg, #0f0c29 0%, #1e1b4b 50%, #0f0c29 100%);
+      padding: 70px 80px;
+      display: flex;
+      flex-direction: column;
+    }
+    .s2-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .s2-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #667eea;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .s2-title {
+      font-size: 56px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .s2-sub {
+      font-size: 20px;
+      color: rgba(255,255,255,0.5);
+    }
+    .s2-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .mode-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+    }
+    .mode-card-num {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .num-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .num-2 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+    .num-3 { background: linear-gradient(135deg, #10b981, #06b6d4); }
+    .num-4 { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
+    .mode-card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .mode-card-tag {
+      font-size: 13px;
+      color: #a78bfa;
+      font-weight: 600;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .mode-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+    }
+
+    /* ============ Shot 3: Translation ============ */
+    .shot-3 {
+      background: radial-gradient(circle at 70% 30%, #302b63 0%, #0f0c29 60%);
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+    }
+    .s3-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .s3-title {
+      font-size: 60px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+    .s3-sub {
+      font-size: 20px;
+      color: rgba(255,255,255,0.55);
+    }
+    .s3-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+    .trans-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      height: 100%;
+    }
+    .trans-flag {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    .trans-lang {
+      font-size: 16px;
+      font-weight: 600;
+      color: #a78bfa;
+      margin-bottom: 18px;
+    }
+    .trans-text {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .arrow {
+      font-size: 48px;
+      background: linear-gradient(135deg, #667eea, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lang-list {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    .lang-pill {
+      padding: 6px 16px;
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 18px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* ============ Shot 4: 7 Models ============ */
+    .shot-4 {
+      background: linear-gradient(160deg, #0f0c29 0%, #1a1a3e 100%);
+      padding: 70px 80px;
+      display: flex;
+      flex-direction: column;
+    }
+    .s4-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .s4-title {
+      font-size: 56px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .s4-sub {
+      font-size: 20px;
+      color: rgba(255,255,255,0.55);
+    }
+    .s4-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 50px;
+    }
+    .models-left {
+      flex: 0 0 380px;
+    }
+    .models-dropdown {
+      background: rgba(15, 15, 30, 0.6);
+      border: 1px solid rgba(102, 126, 234, 0.4);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .dropdown-group {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      padding: 8px 14px 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .dropdown-item {
+      padding: 10px 14px;
+      color: rgba(255,255,255,0.8);
+      font-size: 15px;
+      border-radius: 8px;
+    }
+    .dropdown-item.active {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.25), rgba(118, 75, 162, 0.25));
+      color: #fff;
+    }
+    .models-right {
+      flex: 1;
+    }
+    .model-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .model-tile {
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .model-logo {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .logo-deepseek { background: linear-gradient(135deg, #4d6bfe, #1e3eb8); }
+    .logo-openai { background: linear-gradient(135deg, #10a37f, #0d8a6c); }
+    .logo-claude { background: linear-gradient(135deg, #d97757, #c2664a); }
+    .logo-qwen { background: linear-gradient(135deg, #615ced, #4a45c0); }
+    .logo-kimi { background: linear-gradient(135deg, #1a1a1a, #444); }
+    .logo-glm { background: linear-gradient(135deg, #00a6fb, #007cbf); }
+    .logo-yi { background: linear-gradient(135deg, #00d4aa, #00a884); }
+    .model-name {
+      font-size: 15px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+    }
+    .model-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ============ Shot 5: Shortcuts ============ */
+    .shot-5 {
+      background: radial-gradient(circle at 50% 30%, #302b63 0%, #0f0c29 60%);
+      padding: 70px 80px;
+      display: flex;
+      flex-direction: column;
+    }
+    .s5-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .s5-title {
+      font-size: 60px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+    .s5-sub {
+      font-size: 20px;
+      color: rgba(255,255,255,0.55);
+    }
+    .keys-display {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+    .key {
+      min-width: 100px;
+      height: 100px;
+      padding: 0 24px;
+      background: linear-gradient(180deg, #2a2a4a 0%, #1a1a35 100%);
+      border: 1px solid rgba(102, 126, 234, 0.4);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3), inset 0 -4px 0 rgba(0,0,0,0.3);
+    }
+    .key-plus {
+      font-size: 32px;
+      color: rgba(255,255,255,0.4);
+      align-self: center;
+    }
+    .shortcuts-list {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+    .shortcut-item {
+      flex: 1;
+      max-width: 280px;
+      padding: 24px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .shortcut-keys {
+      display: inline-flex;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .mini-key {
+      padding: 4px 10px;
+      background: linear-gradient(180deg, #2a2a4a 0%, #1a1a35 100%);
+      border: 1px solid rgba(102, 126, 234, 0.4);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .shortcut-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+    }
+    .shortcut-desc strong {
+      color: #fff;
+      display: block;
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shot 1: Hero -->
+  <div class="shot shot-1">
+    <div class="s1-content">
+      <div class="s1-text">
+        <div class="s1-badge">⚡ 3-second summaries</div>
+        <div class="s1-title">Summarize any<br><span class="accent">webpage in seconds</span></div>
+        <div class="s1-sub">One click. Get the core idea instantly.<br>Stop wasting time on content you don't need to read.</div>
+        <div class="s1-features">
+          <div class="s1-feat"><span class="s1-feat-check">✓</span> No setup</div>
+          <div class="s1-feat"><span class="s1-feat-check">✓</span> No sign-up</div>
+          <div class="s1-feat"><span class="s1-feat-check">✓</span> Free forever</div>
+        </div>
+      </div>
+      <div class="mock-popup">
+        <div class="mock-popup-header">
+          <span class="mock-logo">Shandu</span>
+          <span class="mock-badge">PRO</span>
+        </div>
+        <div class="mock-modes">
+          <div class="mock-mode active">Brief</div>
+          <div class="mock-mode">Detailed</div>
+          <div class="mock-mode">Points</div>
+          <div class="mock-mode">Timeline</div>
+        </div>
+        <div class="mock-section-title">📌 Key Points</div>
+        <div class="mock-point"><span class="mock-bullet"></span><span>New attention mechanism reduces compute cost by 40% while maintaining performance.</span></div>
+        <div class="mock-point"><span class="mock-bullet"></span><span>Achieves state-of-the-art results on standard benchmarks.</span></div>
+        <div class="mock-point"><span class="mock-bullet"></span><span>Authors suggest extending to multimodal tasks in future work.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shot 2: 4 Modes -->
+  <div class="shot shot-2">
+    <div class="s2-header">
+      <div class="s2-label">Four Modes</div>
+      <div class="s2-title">Read your way</div>
+      <div class="s2-sub">Pick the perfect summary mode for any content</div>
+    </div>
+    <div class="s2-grid">
+      <div class="mode-card">
+        <div class="mode-card-num num-1">1</div>
+        <h3>Brief</h3>
+        <div class="mode-card-tag">"Should I read this?"</div>
+        <p>One-line core idea + reading recommendation. Quick triage for your reading list.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-card-num num-2">2</div>
+        <h3>Detailed</h3>
+        <div class="mode-card-tag">Deep analysis</div>
+        <p>Arguments, evidence, key data, and conclusion. Everything you need to truly understand.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-card-num num-3">3</div>
+        <h3>Key Points</h3>
+        <div class="mode-card-tag">8-12 facts in seconds</div>
+        <p>All key facts, numbers, and names extracted. Perfect for research and comparison.</p>
+      </div>
+      <div class="mode-card">
+        <div class="mode-card-num num-4">4</div>
+        <h3>Timeline</h3>
+        <div class="mode-card-tag">Events in order</div>
+        <p>Chronological breakdown of events. Ideal for news, history, and developing stories.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shot 3: Translation -->
+  <div class="shot shot-3">
+    <div class="s3-header">
+      <div class="s2-label">6 Languages</div>
+      <div class="s3-title">Read any language</div>
+      <div class="s3-sub">Translate summaries to your preferred language with one click</div>
+    </div>
+    <div class="s3-grid">
+      <div class="trans-card">
+        <div class="trans-flag">🇺🇸</div>
+        <div class="trans-lang">English Original</div>
+        <div class="trans-text">"The new model achieves state-of-the-art performance on standard benchmarks while reducing compute cost by 40%. The architecture introduces a novel attention mechanism that scales efficiently."</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="trans-card">
+        <div class="trans-flag">🇨🇳</div>
+        <div class="trans-lang">中文译文</div>
+        <div class="trans-text">"新模型在标准基准测试上达到 SOTA 性能，同时将计算成本降低 40%。该架构引入了一种新颖的注意力机制，能够高效扩展。"</div>
+      </div>
+    </div>
+    <div class="lang-list">
+      <div class="lang-pill">English</div>
+      <div class="lang-pill">中文</div>
+      <div class="lang-pill">日本語</div>
+      <div class="lang-pill">한국어</div>
+      <div class="lang-pill">Français</div>
+      <div class="lang-pill">Deutsch</div>
+    </div>
+  </div>
+
+  <!-- Shot 4: 7 Models -->
+  <div class="shot shot-4">
+    <div class="s4-header">
+      <div class="s2-label">7 AI Models</div>
+      <div class="s4-title">Bring your own AI</div>
+      <div class="s4-sub">Use free CN models, or bring your own API key</div>
+    </div>
+    <div class="s4-body">
+      <div class="models-left">
+        <div class="models-dropdown">
+          <div class="dropdown-group">Free CN Models</div>
+          <div class="dropdown-item active">⚡ DeepSeek (Recommended)</div>
+          <div class="dropdown-item">Qwen (Alibaba)</div>
+          <div class="dropdown-item">Zhipu GLM-4</div>
+          <div class="dropdown-item">Kimi (Moonshot)</div>
+          <div class="dropdown-item">Yi (01.AI)</div>
+          <div class="dropdown-group">Global Models</div>
+          <div class="dropdown-item">OpenAI GPT-4o</div>
+          <div class="dropdown-item">Claude</div>
+        </div>
+      </div>
+      <div class="models-right">
+        <div class="model-grid">
+          <div class="model-tile">
+            <div class="model-logo logo-deepseek">DS</div>
+            <div><div class="model-name">DeepSeek</div><div class="model-meta">Free · No VPN needed</div></div>
+          </div>
+          <div class="model-tile">
+            <div class="model-logo logo-openai">AI</div>
+            <div><div class="model-name">OpenAI GPT-4o</div><div class="model-meta">Best overall quality</div></div>
+          </div>
+          <div class="model-tile">
+            <div class="model-logo logo-claude">Cl</div>
+            <div><div class="model-name">Claude</div><div class="model-meta">Great for analysis</div></div>
+          </div>
+          <div class="model-tile">
+            <div class="model-logo logo-qwen">Q</div>
+            <div><div class="model-name">Qwen</div><div class="model-meta">Alibaba · Free tier</div></div>
+          </div>
+          <div class="model-tile">
+            <div class="model-logo logo-kimi">K</div>
+            <div><div class="model-name">Kimi</div><div class="model-meta">Moonshot · CN</div></div>
+          </div>
+          <div class="model-tile">
+            <div class="model-logo logo-glm">GLM</div>
+            <div><div class="model-name">Zhipu GLM-4</div><div class="model-meta">Zhipu AI · CN</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shot 5: Shortcuts -->
+  <div class="shot shot-5">
+    <div class="s5-header">
+      <div class="s2-label">Keyboard Shortcuts</div>
+      <div class="s5-title">Built for keyboard ninjas</div>
+      <div class="s5-sub">Summarize without leaving your reading flow</div>
+    </div>
+    <div class="keys-display">
+      <div class="key">Ctrl</div>
+      <div class="key-plus">+</div>
+      <div class="key">Shift</div>
+      <div class="key-plus">+</div>
+      <div class="key">S</div>
+    </div>
+    <div class="shortcuts-list">
+      <div class="shortcut-item">
+        <div class="shortcut-keys">
+          <span class="mini-key">Ctrl</span>
+          <span class="mini-key">Shift</span>
+          <span class="mini-key">S</span>
+        </div>
+        <div class="shortcut-desc"><strong>Open popup</strong>Bring up Shandu instantly</div>
+      </div>
+      <div class="shortcut-item">
+        <div class="shortcut-keys">
+          <span class="mini-key">Ctrl</span>
+          <span class="mini-key">Shift</span>
+          <span class="mini-key">A</span>
+        </div>
+        <div class="shortcut-desc"><strong>Quick summarize</strong>Generate summary in one keystroke</div>
+      </div>
+      <div class="shortcut-item">
+        <div class="shortcut-keys">
+          <span class="mini-key">Right-click</span>
+        </div>
+        <div class="shortcut-desc"><strong>Summarize selection</strong>Right-click any selected text</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

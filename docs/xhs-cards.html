@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>闪读 - 小红书配图（开发者故事版）</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+      padding: 60px 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      width: 540px;
+      height: 720px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    /* ========== 卡片1: 封面 ========== */
+    .card-cover {
+      background: linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 48px;
+    }
+
+    .card-cover::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-emoji {
+      font-size: 64px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-title {
+      font-size: 38px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-subtitle {
+      font-size: 18px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      max-width: 380px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      padding: 8px 24px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 24px;
+      font-size: 15px;
+      color: #a78bfa;
+      font-weight: 600;
+      margin-top: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========== 卡片2: 起因 ========== */
+    .card-story {
+      background: linear-gradient(160deg, #0f0c29 0%, #1a1a3e 50%, #0f0c29 100%);
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #667eea;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .story-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    .story-text {
+      font-size: 16px;
+      color: rgba(255,255,255,0.65);
+      line-height: 2;
+      flex: 1;
+    }
+
+    .story-text p {
+      margin-bottom: 16px;
+    }
+
+    .story-highlight {
+      color: #a78bfa;
+      font-weight: 600;
+    }
+
+    .story-quote {
+      margin-top: 16px;
+      padding: 20px 24px;
+      background: rgba(102, 126, 234, 0.08);
+      border-left: 3px solid #667eea;
+      border-radius: 0 12px 12px 0;
+      font-size: 17px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+      line-height: 1.7;
+    }
+
+    /* ========== 卡片3: 踩坑 ========== */
+    .card-pain {
+      background: linear-gradient(160deg, #0f0c29 0%, #1e1b4b 50%, #0f0c29 100%);
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pain-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pain-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .pain-emoji {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pain-content h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .pain-content p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+
+    .pain-footer {
+      margin-top: 20px;
+      text-align: center;
+      padding: 14px 20px;
+      background: rgba(102, 126, 234, 0.08);
+      border: 1px dashed rgba(102, 126, 234, 0.3);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .pain-footer strong {
+      color: #a78bfa;
+    }
+
+    /* ========== 卡片4: 成果 ========== */
+    .card-result {
+      background: linear-gradient(160deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .result-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .result-num {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .result-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .result-features {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .result-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .result-check {
+      color: #667eea;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .result-tip {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ========== 卡片5: CTA ========== */
+    .card-cta {
+      background: linear-gradient(160deg, #1a1a3e 0%, #302b63 50%, #1a1a3e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 48px;
+      position: relative;
+    }
+
+    .card-cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-emoji {
+      font-size: 56px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.4;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      max-width: 400px;
+      margin-bottom: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 44px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 32px;
+      box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 28px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-search-text {
+      font-size: 15px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .cta-search-text strong {
+      color: #fff;
+    }
+
+    .cta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-tag {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 卡片1: 封面 -->
+  <div class="card card-cover">
+    <div class="cover-emoji">💻</div>
+    <div class="cover-title">下班后花两周<br>做了个 Chrome 插件</div>
+    <div class="cover-subtitle">一个程序员的独立开发故事<br>从 0 到上架 Chrome 商店</div>
+    <div class="cover-badge">👉 左滑看完整故事</div>
+  </div>
+
+  <!-- 卡片2: 起因 -->
+  <div class="card card-story">
+    <div class="story-label">起因</div>
+    <div class="story-title">为什么要做这个插件？</div>
+    <div class="story-text">
+      <p>我是一个普通程序员，每天要读大量的技术文章、行业资讯和英文文档。</p>
+      <p>经常遇到这种情况：打开一篇 <span class="story-highlight">3000 字的文章</span>，读了 5 分钟发现对自己没用。时间就这么浪费了。</p>
+      <p>有一天突然想：能不能让 AI 帮我先"读"一遍？</p>
+    </div>
+    <div class="story-quote">
+      第一版很粗糙，就是调一下 API，把网页内容丢过去让它总结。但用起来真的爽——一篇长文 3 秒出摘要，值不值得细读一目了然。
+    </div>
+  </div>
+
+  <!-- 卡片3: 踩坑 -->
+  <div class="card card-pain">
+    <div class="story-label">踩坑</div>
+    <div class="story-title">开发过程中踩的坑</div>
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-emoji">💥</div>
+        <div class="pain-content">
+          <h4>Manifest V3 迁移</h4>
+          <p>Chrome 强制升级到 V3，background script 变成 service worker，一堆 API 不兼容</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-emoji">🔌</div>
+        <div class="pain-content">
+          <h4>接了 7 家 AI 模型</h4>
+          <p>DeepSeek、通义千问、智谱、Kimi、零一万物、OpenAI、Claude，每家接口都不一样</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-emoji">🤯</div>
+        <div class="pain-content">
+          <h4>Content Script 注入时机</h4>
+          <p>有些网页加载慢，content script 注入失败，重试逻辑调了好久才稳定</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-emoji">💰</div>
+        <div class="pain-content">
+          <h4>从免费到收费</h4>
+          <p>自掏腰包搭代理服务让用户免费用，后台迁移了 3 次，才找到稳定的方案</p>
+        </div>
+      </div>
+    </div>
+    <div class="pain-footer">
+      但最后都解决了 <strong>;-)</strong>
+    </div>
+  </div>
+
+  <!-- 卡片4: 成果 -->
+  <div class="card card-result">
+    <div class="story-label">成果</div>
+    <div class="story-title">两周的成果</div>
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="result-num">2</div>
+        <div class="result-label">周开发时间</div>
+      </div>
+      <div class="result-item">
+        <div class="result-num">7</div>
+        <div class="result-label">家 AI 模型</div>
+      </div>
+      <div class="result-item">
+        <div class="result-num">4</div>
+        <div class="result-label">种摘要模式</div>
+      </div>
+      <div class="result-item">
+        <div class="result-num">6</div>
+        <div class="result-label">种语言翻译</div>
+      </div>
+    </div>
+    <div class="result-features">
+      <div class="result-feature"><span class="result-check">✓</span> 装上就能用，不用翻墙，不用配 API Key</div>
+      <div class="result-feature"><span class="result-check">✓</span> 简短 / 详细 / 要点提取 / 时间线 4 种模式</div>
+      <div class="result-feature"><span class="result-check">✓</span> 能翻译成中英日韩法德 6 种语言</div>
+      <div class="result-feature"><span class="result-check">✓</span> Ctrl+Shift+S 快捷键一键唤起</div>
+      <div class="result-feature"><span class="result-check">✓</span> 免费版每天 3 次，日常够用</div>
+    </div>
+    <div class="result-tip">🔒 所有数据本地存储，不上传任何第三方服务器</div>
+  </div>
+
+  <!-- 卡片5: CTA -->
+  <div class="card card-cta">
+    <div class="cta-emoji">🚀</div>
+    <div class="cta-title">如果你也经常被长文困扰<br>可以试试「闪读」</div>
+    <div class="cta-subtitle">
+      Chrome 商店免费安装<br>
+      不用翻墙 · 不用注册 · 装上就用<br>
+      有任何建议欢迎评论区告诉我 🫡
+    </div>
+    <div class="cta-button">
+      Chrome 商店搜索 <strong>「闪读」</strong> →
+    </div>
+    <div class="cta-search">
+      <span>🔍</span>
+      <span class="cta-search-text">搜索 <strong>「闪读」</strong> 或 <strong>「AI 网页摘要」</strong></span>
+    </div>
+    <div class="cta-tags">
+      <span class="cta-tag">#独立开发者</span>
+      <span class="cta-tag">#Chrome插件</span>
+      <span class="cta-tag">#效率工具</span>
+      <span class="cta-tag">#AI工具</span>
+      <span class="cta-tag">#程序员日常</span>
+    </div>
+  </div>
+
+</body>
+</html>

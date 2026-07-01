@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 网页摘要</title>
+  <title>AI Webpage Summary</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -12,45 +12,45 @@
     <div id="onboardingView" class="hidden">
       <div class="onboarding-content">
         <div class="onboarding-icon">⚡</div>
-        <h2 class="onboarding-title">欢迎使用闪读</h2>
-        <p class="onboarding-desc">一键 AI 摘要，3 秒看懂任何网页</p>
+        <h2 class="onboarding-title" data-i18n="onboardingTitle"></h2>
+        <p class="onboarding-desc" data-i18n="onboardingDesc"></p>
         <div class="onboarding-steps">
           <div class="onboarding-step">
             <span class="step-num">1</span>
             <div>
-              <strong>零配置开箱即用</strong>
-              <p>无需填写 API Key，直接点击生成摘要</p>
+              <strong data-i18n="onboardingStep1Title"></strong>
+              <p data-i18n="onboardingStep1Desc"></p>
             </div>
           </div>
           <div class="onboarding-step">
             <span class="step-num">2</span>
             <div>
-              <strong>4 种摘要模式</strong>
-              <p>简短、详细、要点、时间线，按需选择</p>
+              <strong data-i18n="onboardingStep2Title"></strong>
+              <p data-i18n="onboardingStep2Desc"></p>
             </div>
           </div>
           <div class="onboarding-step">
             <span class="step-num">3</span>
             <div>
-              <strong>快捷键操作</strong>
-              <p>Ctrl+Shift+S 打开，Ctrl+Shift+A 快速摘要</p>
+              <strong data-i18n="onboardingStep3Title"></strong>
+              <p data-i18n="onboardingStep3Desc"></p>
             </div>
           </div>
         </div>
-        <button id="onboardingStartBtn" class="primary-btn">开始使用</button>
+        <button id="onboardingStartBtn" class="primary-btn" data-i18n="onboardingStart"></button>
       </div>
     </div>
 
     <!-- 头部 -->
     <header class="header">
-      <h1>闪读</h1>
+      <h1 data-i18n="extShortName"></h1>
       <div class="header-btns">
         <span id="usageCounter" class="usage-counter"></span>
-        <button id="proBtn" class="pro-badge" title="升级 Pro">PRO</button>
-        <button id="historyBtn" class="icon-btn" title="历史记录">
+        <button id="proBtn" class="pro-badge" data-i18n-title="headerProBadge">PRO</button>
+        <button id="historyBtn" class="icon-btn" data-i18n-title="headerHistory">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 6.5h12M2 10h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="13" cy="10" r="2.5" stroke="currentColor" stroke-width="1.2"/></svg>
         </button>
-        <button id="settingsBtn" class="icon-btn" title="设置">
+        <button id="settingsBtn" class="icon-btn" data-i18n-title="headerSettings">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
         </button>
       </div>
@@ -60,16 +60,16 @@
     <main id="mainView">
       <!-- 摘要模式选择 -->
       <div class="mode-selector">
-        <button class="mode-btn active" data-mode="brief">简短</button>
-        <button class="mode-btn" data-mode="detailed">详细</button>
-        <button class="mode-btn" data-mode="keypoints">要点</button>
-        <button class="mode-btn" data-mode="timeline">时间线</button>
+        <button class="mode-btn active" data-mode="brief" data-i18n="modeBrief"></button>
+        <button class="mode-btn" data-mode="detailed" data-i18n="modeDetailed"></button>
+        <button class="mode-btn" data-mode="keypoints" data-i18n="modeKeyPoints"></button>
+        <button class="mode-btn" data-mode="timeline" data-i18n="modeTimeline"></button>
       </div>
 
       <!-- 摘要按钮 -->
       <button id="summarizeBtn" class="primary-btn">
-        <span class="btn-text">生成摘要</span>
-        <span class="btn-loading hidden">⏳ 分析中...</span>
+        <span class="btn-text" data-i18n="generateBtn"></span>
+        <span class="btn-loading hidden" data-i18n="loadingBtn"></span>
       </button>
 
       <!-- 摘要结果 -->
@@ -79,33 +79,33 @@
         </div>
 
         <div class="result-section">
-          <h3>📌 核心观点</h3>
+          <h3 data-i18n="sectionKeyPoints"></h3>
           <ul id="keyPoints" class="key-points"></ul>
         </div>
 
         <div class="result-section" id="dataSection">
-          <h3>📊 关键数据</h3>
+          <h3 data-i18n="sectionKeyData"></h3>
           <ul id="keyData" class="key-data"></ul>
         </div>
 
         <div class="result-section" id="actionSection">
-          <h3>💡 行动建议</h3>
+          <h3 data-i18n="sectionActions"></h3>
           <ul id="actions" class="actions"></ul>
         </div>
 
         <!-- 操作按钮 -->
         <div class="action-buttons">
-          <button id="copyBtn" class="action-btn">📋 复制</button>
-          <button id="exportBtn" class="action-btn">📄 导出</button>
-          <button id="regenerateBtn" class="action-btn">🔄 重新生成</button>
+          <button id="copyBtn" class="action-btn" data-i18n="btnCopy"></button>
+          <button id="exportBtn" class="action-btn" data-i18n="btnExport"></button>
+          <button id="regenerateBtn" class="action-btn" data-i18n="btnRegenerate"></button>
         </div>
 
         <!-- 好评引导 -->
         <div id="reviewPrompt" class="review-prompt hidden">
-          <p>闪读对你有帮助？给个好评支持一下吧</p>
+          <p data-i18n="reviewPrompt"></p>
           <div class="review-prompt-btns">
-            <a id="reviewLink" href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc/reviews" target="_blank" class="review-btn review-btn-primary">去评价</a>
-            <button id="reviewDismissBtn" class="review-btn review-btn-dismiss">以后再说</button>
+            <a id="reviewLink" href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc/reviews" target="_blank" class="review-btn review-btn-primary" data-i18n="reviewGoBtn"></a>
+            <button id="reviewDismissBtn" class="review-btn review-btn-dismiss" data-i18n="reviewDismissBtn"></button>
           </div>
         </div>
 
@@ -113,19 +113,19 @@
         <div class="translate-section">
           <div class="translate-bar">
             <select id="translateTarget" class="translate-select">
-              <option value="zh">翻译为中文</option>
-              <option value="en">翻译为 English</option>
-              <option value="ja">翻译为日本語</option>
-              <option value="ko">翻译为한국어</option>
-              <option value="fr">翻译为 Français</option>
-              <option value="de">翻译为 Deutsch</option>
+              <option value="zh" data-i18n-lang="zh"></option>
+              <option value="en" data-i18n-lang="en"></option>
+              <option value="ja" data-i18n-lang="ja"></option>
+              <option value="ko" data-i18n-lang="ko"></option>
+              <option value="fr" data-i18n-lang="fr"></option>
+              <option value="de" data-i18n-lang="de"></option>
             </select>
-            <button id="translateBtn" class="translate-btn">🌐 翻译摘要</button>
+            <button id="translateBtn" class="translate-btn" data-i18n="translateBtn"></button>
           </div>
           <div id="translateResult" class="translate-result hidden">
             <div class="translate-result-header">
               <span id="translateLang" class="translate-lang"></span>
-              <button id="toggleOriginalBtn" class="toggle-btn">查看原文</button>
+              <button id="toggleOriginalBtn" class="toggle-btn" data-i18n="toggleShowOriginal"></button>
             </div>
             <ul id="translatedPoints" class="key-points"></ul>
             <ul id="translatedData" class="key-data hidden"></ul>
@@ -143,97 +143,97 @@
     <!-- 历史记录界面 -->
     <div id="historyView" class="hidden">
       <div class="settings-header">
-        <button id="backFromHistoryBtn" class="icon-btn" title="返回">
+        <button id="backFromHistoryBtn" class="icon-btn" data-i18n-title="headerBack">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <h2>历史记录</h2>
-        <button id="clearHistoryBtn" class="icon-btn danger" title="清空历史">
+        <h2 data-i18n="headerHistory"></h2>
+        <button id="clearHistoryBtn" class="icon-btn danger" data-i18n-title="headerClearHistory">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6 4V2.5h4V4M5 4v8.5h6V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 7v3.5M9 7v3.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
         </button>
       </div>
 
       <div id="historyList" class="history-list">
-        <p class="empty-state">暂无历史记录</p>
+        <p class="empty-state" data-i18n="historyEmpty"></p>
       </div>
     </div>
 
     <!-- 设置界面 -->
     <div id="settingsView" class="hidden">
       <div class="settings-header">
-        <button id="backBtn" class="icon-btn" title="返回">
+        <button id="backBtn" class="icon-btn" data-i18n-title="headerBack">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <h2>设置</h2>
+        <h2 data-i18n="headerSettings"></h2>
       </div>
 
       <div class="settings-form">
         <div class="form-group">
-          <label for="apiKey">API Key</label>
+          <label for="apiKey" data-i18n="settingsApiKey"></label>
           <input type="password" id="apiKey" placeholder="sk-...">
-          <small>支持 OpenAI / Claude / DeepSeek 等 API Key</small>
+          <small data-i18n="settingsApiKeyHint"></small>
         </div>
 
         <div class="form-group">
-          <label for="apiProvider">API 提供商</label>
+          <label for="apiProvider" data-i18n="settingsApiProvider"></label>
           <select id="apiProvider">
-            <optgroup label="🇨🇳 国内免费模型">
-              <option value="deepseek">DeepSeek (推荐)</option>
-              <option value="qwen">通义千问 (阿里)</option>
-              <option value="glm">智谱 GLM-4</option>
-              <option value="kimi">Kimi (月之暗面)</option>
-              <option value="yi">零一万物 (Yi)</option>
+            <optgroup id="providerGroupCN" label="">
+              <option value="deepseek" data-i18n-text="providerDeepSeek"></option>
+              <option value="qwen" data-i18n-text="providerQwen"></option>
+              <option value="glm" data-i18n-text="providerGLM"></option>
+              <option value="kimi" data-i18n-text="providerKimi"></option>
+              <option value="yi" data-i18n-text="providerYi"></option>
             </optgroup>
-            <optgroup label="🌍 海外模型">
-              <option value="openai">OpenAI (GPT-4o)</option>
-              <option value="openai-gpt35">OpenAI (GPT-3.5)</option>
-              <option value="claude">Claude</option>
+            <optgroup id="providerGroupGlobal" label="">
+              <option value="openai" data-i18n-text="providerOpenAI"></option>
+              <option value="openai-gpt35" data-i18n-text="providerOpenAI35"></option>
+              <option value="claude" data-i18n-text="providerClaude"></option>
             </optgroup>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="language">摘要语言</label>
+          <label for="language" data-i18n="settingsSummaryLang"></label>
           <select id="language">
-            <option value="auto">自动检测</option>
-            <option value="zh">中文</option>
-            <option value="en">English</option>
+            <option value="auto" data-i18n="settingsLangAuto"></option>
+            <option value="zh" data-i18n="langZh"></option>
+            <option value="en" data-i18n="langEn"></option>
           </select>
         </div>
 
-        <button id="saveSettingsBtn" class="primary-btn">保存设置</button>
+        <button id="saveSettingsBtn" class="primary-btn" data-i18n="settingsSave"></button>
 
         <div class="help-section">
-          <div class="help-toggle" id="helpToggle">如何获取 API Key？ ▼</div>
+          <div class="help-toggle" id="helpToggle" data-i18n="settingsHelpTitle"></div>
           <div id="helpContent" class="help-content hidden">
             <div class="help-item">
-              <strong>DeepSeek（推荐）</strong>
-              <p>1. 打开 <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
-              <p>2. 注册登录 → API Keys → 创建 API Key</p>
-              <p class="help-free">注册即送体验额度</p>
+              <strong>DeepSeek</strong>
+              <p>1. Open <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a></p>
+              <p>2. Sign in → API Keys → Create</p>
+              <p class="help-free" data-i18n="settingsHelpFree"></p>
             </div>
             <div class="help-item">
-              <strong>通义千问（阿里）</strong>
-              <p>1. 打开 <a href="https://bailian.console.aliyun.com" target="_blank">百炼控制台</a></p>
-              <p>2. 开通服务 → API-KEY 管理 → 创建</p>
-              <p class="help-free">按量付费，低门槛</p>
+              <strong>Qwen (Alibaba)</strong>
+              <p>1. Open <a href="https://bailian.console.aliyun.com" target="_blank">Bailian Console</a></p>
+              <p>2. Enable service → API-KEY → Create</p>
+              <p class="help-free" data-i18n="settingsHelpPayg"></p>
             </div>
             <div class="help-item">
-              <strong>智谱 GLM-4</strong>
-              <p>1. 打开 <a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
-              <p>2. 注册 → 个人中心 → API Keys → 创建</p>
-              <p class="help-free">注册即送体验额度</p>
+              <strong>Zhipu GLM-4</strong>
+              <p>1. Open <a href="https://open.bigmodel.cn" target="_blank">open.bigmodel.cn</a></p>
+              <p>2. Sign in → API Keys → Create</p>
+              <p class="help-free" data-i18n="settingsHelpFree"></p>
             </div>
             <div class="help-item">
-              <strong>Kimi（月之暗面）</strong>
-              <p>1. 打开 <a href="https://platform.moonshot.cn" target="_blank">platform.moonshot.cn</a></p>
-              <p>2. 注册 → API Keys → 创建</p>
-              <p class="help-free">注册即送体验额度</p>
+              <strong>Kimi (Moonshot)</strong>
+              <p>1. Open <a href="https://platform.moonshot.cn" target="_blank">platform.moonshot.cn</a></p>
+              <p>2. Sign in → API Keys → Create</p>
+              <p class="help-free" data-i18n="settingsHelpFree"></p>
             </div>
             <div class="help-item">
-              <strong>零一万物（Yi）</strong>
-              <p>1. 打开 <a href="https://platform.lingyiwanwu.com" target="_blank">platform.lingyiwanwu.com</a></p>
-              <p>2. 注册 → API Keys → 创建</p>
-              <p class="help-free">按量付费，低门槛</p>
+              <strong>Yi (01.AI)</strong>
+              <p>1. Open <a href="https://platform.lingyiwanwu.com" target="_blank">platform.lingyiwanwu.com</a></p>
+              <p>2. Sign in → API Keys → Create</p>
+              <p class="help-free" data-i18n="settingsHelpPayg"></p>
             </div>
           </div>
         </div>
@@ -243,65 +243,66 @@
     <!-- Pro 升级界面 -->
     <div id="proView" class="hidden">
       <div class="settings-header">
-        <button id="backFromProBtn" class="icon-btn" title="返回">
+        <button id="backFromProBtn" class="icon-btn" data-i18n-title="headerBack">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <h2>升级 Pro</h2>
+        <h2 data-i18n="proViewTitle"></h2>
       </div>
 
       <div class="pro-view-content">
         <div class="pro-hero">
-          <div class="pro-hero-icon">PRO</div>
-          <div class="pro-hero-title">解锁全部功能</div>
-          <div class="pro-hero-price">¥29 <span>限时优惠 · 原价 ¥49</span></div>
+          <div class="pro-hero-icon" data-i18n="proHeroIcon"></div>
+          <div class="pro-hero-title" data-i18n="proHeroTitle"></div>
+          <div class="pro-hero-price"><span data-i18n="proHeroPrice"></span> <span data-i18n="proHeroPriceNote"></span></div>
         </div>
 
         <ul class="pro-features">
-          <li>无限次摘要</li>
-          <li>4 种摘要模式（详细 + 要点 + 时间线）</li>
-          <li>6 种语言翻译</li>
-          <li>导出 Markdown</li>
-          <li>所有 AI 模型支持</li>
+          <li data-i18n="proFeatureUnlimited"></li>
+          <li data-i18n="proFeatureModes"></li>
+          <li data-i18n="proFeatureTranslate"></li>
+          <li data-i18n="proFeatureExport"></li>
+          <li data-i18n="proFeatureModels"></li>
         </ul>
 
         <div class="qr-pay-section">
-          <p class="qr-pay-title">扫码支付 ¥29</p>
+          <p class="qr-pay-title" data-i18n="qrPayTitle"></p>
           <div class="qr-codes">
             <div class="qr-item">
-              <img src="assets/alipay-qr.png" alt="支付宝" class="qr-img">
-              <span>支付宝</span>
+              <img src="assets/alipay-qr.png" alt="Alipay" class="qr-img">
+              <span data-i18n="qrAlipay"></span>
             </div>
             <div class="qr-item">
-              <img src="assets/wechat-qr.png" alt="微信" class="qr-img">
-              <span>微信支付</span>
+              <img src="assets/wechat-qr.png" alt="WeChat" class="qr-img">
+              <span data-i18n="qrWechat"></span>
             </div>
           </div>
           <div class="qr-contact">
-            <p class="qr-contact-title">付款后加微信，即刻获取激活码</p>
+            <p class="qr-contact-title" data-i18n="contactTitle"></p>
             <div class="qr-contact-wechat">
-              <span class="wechat-label">微信号：</span>
+              <span class="wechat-label" data-i18n="contactWechatLabel"></span>
               <span class="wechat-id" id="wechatId">Yshuang0801</span>
-              <button class="copy-wechat-btn" id="copyWechatBtn" title="复制微信号">复制</button>
+              <button class="copy-wechat-btn" id="copyWechatBtn" data-i18n-title="contactWechatLabel" data-i18n="contactCopyBtn"></button>
             </div>
-            <p class="qr-contact-tip">加微信时备注「闪读Pro」，发支付截图即可</p>
+            <p class="qr-contact-tip" data-i18n="contactTip"></p>
           </div>
         </div>
 
         <div class="pro-input-section">
-          <div class="pro-input-divider"><span>输入激活码</span></div>
-          <input type="text" id="proKeyInput" placeholder="SD-XXXX-XXXX-XXXX" maxlength="20">
-          <button id="activateBtn" class="primary-btn">激活 Pro</button>
+          <div class="pro-input-divider"><span data-i18n="proInputDivider"></span></div>
+          <input type="text" id="proKeyInput" data-i18n-placeholder="proPlaceholderDefault" maxlength="20">
+          <button id="activateBtn" class="primary-btn" data-i18n="proActivateBtn"></button>
         </div>
       </div>
     </div>
 
     <!-- 底部 -->
     <footer class="footer">
-      <span id="statusText">⚡ 准备就绪 | 快捷键: Ctrl+Shift+S</span>
+      <span id="statusText" data-i18n="footerReady"></span>
     </footer>
   </div>
 
   <script src="valid-hashes.js"></script>
+  <script src="i18n.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

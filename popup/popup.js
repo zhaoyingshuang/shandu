@@ -95,7 +95,7 @@ class AIWebSummary {
       const toggle = document.getElementById('helpToggle');
       content.classList.toggle('hidden');
       toggle.textContent = content.classList.contains('hidden')
-        ? '如何获取 API Key？ ▼' : '如何获取 API Key？ ▲';
+        ? chrome.i18n.getMessage('settingsHelpTitle') : chrome.i18n.getMessage('settingsHelpTitleOpen');
     });
 
     // 历史记录
@@ -115,8 +115,8 @@ class AIWebSummary {
     document.getElementById('copyWechatBtn').addEventListener('click', () => {
       navigator.clipboard.writeText('Yshuang0801').then(() => {
         const btn = document.getElementById('copyWechatBtn');
-        btn.textContent = '已复制';
-        setTimeout(() => { btn.textContent = '复制'; }, 1500);
+        btn.textContent = chrome.i18n.getMessage('contactCopied');
+        setTimeout(() => { btn.textContent = chrome.i18n.getMessage('contactCopyBtn'); }, 1500);
       });
     });
 
@@ -200,17 +200,17 @@ class AIWebSummary {
     if (this.isPro) {
       proBtn.textContent = 'PRO';
       proBtn.classList.add('active');
-      usageCounter.textContent = 'Pro · 无限使用';
+      usageCounter.textContent = chrome.i18n.getMessage('usageProUnlimited');
     } else if (!this.settings.apiKey) {
       // 代理免费模式
       const remaining = this.PROXY_DAILY_LIMIT - this.proxyUsage;
-      usageCounter.textContent = `免费模式: ${remaining}/${this.PROXY_DAILY_LIMIT}`;
+      usageCounter.textContent = chrome.i18n.getMessage('usageFreeMode', [String(remaining), String(this.PROXY_DAILY_LIMIT)]);
       if (remaining <= 0) {
         usageCounter.style.color = '#f87171';
       }
     } else {
       const remaining = this.FREE_DAILY_LIMIT - this.todayUsage;
-      usageCounter.textContent = `今日剩余: ${remaining}/${this.FREE_DAILY_LIMIT}`;
+      usageCounter.textContent = chrome.i18n.getMessage('usageToday', [String(remaining), String(this.FREE_DAILY_LIMIT)]);
       if (remaining <= 0) {
         usageCounter.style.color = '#f87171';
       }
@@ -240,7 +240,7 @@ class AIWebSummary {
   checkUsageLimit() {
     if (this.isPro) return true;
     if (this.todayUsage >= this.FREE_DAILY_LIMIT) {
-      this.showError(`今日已用 ${this.todayUsage} 次，免费版每日限 ${this.FREE_DAILY_LIMIT} 次。升级 Pro 解锁无限使用。`);
+      this.showError(chrome.i18n.getMessage('errorUsageLimit', [String(this.todayUsage), String(this.FREE_DAILY_LIMIT)]));
       return false;
     }
     return true;
@@ -269,8 +269,9 @@ class AIWebSummary {
   }
 
   checkProxyLimit() {
+    if (this.isPro) return true;
     if (this.proxyUsage >= this.PROXY_DAILY_LIMIT) {
-      this.showError(`今日免费额度已用完（${this.PROXY_DAILY_LIMIT} 次）。升级 Pro 解锁无限使用。`);
+      this.showError(chrome.i18n.getMessage('errorProxyLimit', [String(this.PROXY_DAILY_LIMIT)]));
       return false;
     }
     return true;
@@ -352,7 +353,7 @@ class AIWebSummary {
 
     if (!code) {
       input.style.borderColor = '#f87171';
-      input.setAttribute('placeholder', '请输入激活码');
+      input.setAttribute('placeholder', chrome.i18n.getMessage('proPlaceholderEmpty'));
       return;
     }
 
@@ -361,7 +362,7 @@ class AIWebSummary {
     if (!pattern.test(code)) {
       input.style.borderColor = '#f87171';
       input.value = '';
-      input.setAttribute('placeholder', '格式: SD-XXXX-XXXX-XXXX');
+      input.setAttribute('placeholder', chrome.i18n.getMessage('proPlaceholderInvalidFormat'));
       return;
     }
 
@@ -373,13 +374,13 @@ class AIWebSummary {
     if (!validHashes.includes(hash)) {
       input.style.borderColor = '#f87171';
       input.value = '';
-      input.setAttribute('placeholder', '激活码无效，请重新输入');
+      input.setAttribute('placeholder', chrome.i18n.getMessage('proPlaceholderInvalid'));
       return;
     }
 
     // 服务端验证：一码一用
     btn.disabled = true;
-    btn.textContent = '验证中...';
+    btn.textContent = chrome.i18n.getMessage('proVerifyingBtn');
     input.style.borderColor = '';
 
     try {
@@ -399,7 +400,7 @@ class AIWebSummary {
       } else {
         input.style.borderColor = '#f87171';
         input.value = '';
-        input.setAttribute('placeholder', result.error || '激活码已被使用');
+        input.setAttribute('placeholder', result.error || chrome.i18n.getMessage('proPlaceholderUsed'));
       }
     } catch (e) {
       // 网络失败时回退到本地验证
@@ -408,7 +409,7 @@ class AIWebSummary {
       if (usedKeys.includes(hash)) {
         input.style.borderColor = '#f87171';
         input.value = '';
-        input.setAttribute('placeholder', '激活码已被使用');
+        input.setAttribute('placeholder', chrome.i18n.getMessage('proPlaceholderUsed'));
       } else {
         usedKeys.push(hash);
         await chrome.storage.local.set({ proKey: code, usedKeys });
@@ -418,7 +419,7 @@ class AIWebSummary {
       }
     } finally {
       btn.disabled = false;
-      btn.textContent = '激活 Pro';
+      btn.textContent = chrome.i18n.getMessage('proActivateBtn');
     }
   }
 
@@ -509,10 +510,10 @@ class AIWebSummary {
   updateStatus() {
     const statusText = document.getElementById('statusText');
     if (!this.settings.apiKey) {
-      statusText.textContent = '⚡ 免费模式 · 无需配置 | 快捷键: Ctrl+Shift+S';
+      statusText.textContent = chrome.i18n.getMessage('footerFreeMode');
       statusText.style.color = '#666';
     } else {
-      statusText.textContent = '⚡ 准备就绪 | 快捷键: Ctrl+Shift+S';
+      statusText.textContent = chrome.i18n.getMessage('footerReady');
       statusText.style.color = '#666';
     }
   }
@@ -544,14 +545,14 @@ class AIWebSummary {
       return;
     }
     if (!this.settings.apiKey) {
-      this.showError('翻译功能需要配置 API Key，请在设置中添加。');
+      this.showError(chrome.i18n.getMessage('errorTranslateNoKey'));
       return;
     }
 
     const targetLang = document.getElementById('translateTarget').value;
     const btn = document.getElementById('translateBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ 翻译中...';
+    btn.textContent = chrome.i18n.getMessage('translatingBtn');
 
     try {
       const textToTranslate = this.formatSummaryForTranslation(this.currentSummary);
@@ -561,17 +562,17 @@ class AIWebSummary {
       this.showTranslateResult(translated, targetLang);
     } catch (error) {
       console.error('Translate error:', error);
-      this.showError('翻译失败: ' + (error.message || '请重试'));
+      this.showError(chrome.i18n.getMessage('errorTranslateFailed', [error.message || '']));
     } finally {
       btn.disabled = false;
-      btn.textContent = '🌐 翻译摘要';
+      btn.textContent = chrome.i18n.getMessage('translateBtn');
     }
   }
 
   // 右键翻译选中文字
   async translateText(text) {
     if (!this.settings.apiKey) {
-      this.showError('翻译功能需要配置 API Key，请在设置中添加。');
+      this.showError(chrome.i18n.getMessage('errorTranslateNoKey'));
       return;
     }
 
@@ -591,11 +592,11 @@ class AIWebSummary {
       };
 
       this.currentSummary = fakeSummary;
-      this.currentPageInfo = { title: '翻译结果', url: '' };
+      this.currentPageInfo = { title: chrome.i18n.getMessage('historyTranslateResult'), url: '' };
       this.showResult(fakeSummary);
     } catch (error) {
       console.error('Translate error:', error);
-      this.showError('翻译失败: ' + (error.message || '请重试'));
+      this.showError(chrome.i18n.getMessage('errorTranslateFailed', [error.message || '']));
     } finally {
       this.setLoading(false);
     }
@@ -732,7 +733,7 @@ class AIWebSummary {
     document.getElementById('actionSection').classList.add('hidden');
 
     const toggleBtn = document.getElementById('toggleOriginalBtn');
-    toggleBtn.textContent = '查看原文';
+    toggleBtn.textContent = chrome.i18n.getMessage('toggleShowOriginal');
     toggleBtn.classList.remove('active');
   }
 
@@ -748,7 +749,7 @@ class AIWebSummary {
         document.getElementById('dataSection').classList.add('hidden');
         document.getElementById('actionSection').classList.add('hidden');
         translateResult.classList.remove('hidden');
-        toggleBtn.textContent = '查看原文';
+        toggleBtn.textContent = chrome.i18n.getMessage('toggleShowOriginal');
         toggleBtn.classList.remove('active');
       }
     } else {
@@ -761,7 +762,7 @@ class AIWebSummary {
         document.getElementById('actionSection').classList.remove('hidden');
       }
       translateResult.classList.add('hidden');
-      toggleBtn.textContent = '查看译文';
+      toggleBtn.textContent = chrome.i18n.getMessage('toggleShowTranslation');
       toggleBtn.classList.add('active');
     }
 
@@ -792,8 +793,17 @@ class AIWebSummary {
       // 获取当前标签页
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-      if (!tab || !tab.id || tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://') || tab.url === 'about:blank') {
-        throw new Error('当前页面不支持摘要，请在一个普通网页上使用');
+      const url = tab?.url || '';
+      const isRestricted = !tab || !tab.id
+        || url.startsWith('chrome://')
+        || url.startsWith('chrome-extension://')
+        || url.startsWith('edge://')
+        || url.startsWith('about:')
+        || url.startsWith('https://chrome.google.com/webstore')
+        || url.startsWith('https://chromewebstore.google.com')
+        || url.startsWith('https://chromewebstore.google.com');
+      if (isRestricted) {
+        throw new Error(chrome.i18n.getMessage('errorPageUnsupported'));
       }
 
       // 尝试向 content script 请求页面内容，失败则注入 content script 后重试
@@ -814,7 +824,7 @@ class AIWebSummary {
       }
 
       if (!response || !response.content) {
-        throw new Error('无法获取页面内容');
+        throw new Error(chrome.i18n.getMessage('errorNoContent'));
       }
 
       // 保存页面信息
@@ -846,9 +856,9 @@ class AIWebSummary {
     } catch (error) {
       console.error('Summarize error:', error);
       if (error.name === 'TimeoutError' || error.message?.includes('timed out')) {
-        this.showError('请求超时，AI 服务响应较慢，请稍后重试。');
+        this.showError(chrome.i18n.getMessage('errorTimeout'));
       } else {
-        this.showError(error.message || '生成摘要失败，请重试');
+        this.showError(error.message || chrome.i18n.getMessage('errorGeneric'));
       }
     } finally {
       this.setLoading(false);
@@ -1282,7 +1292,7 @@ class AIWebSummary {
 
     try {
       await navigator.clipboard.writeText(text);
-      this.showButtonFeedback('copyBtn', '✅ 已复制');
+      this.showButtonFeedback('copyBtn', chrome.i18n.getMessage('copiedFeedback'));
     } catch (error) {
       console.error('Copy failed:', error);
     }
@@ -1306,7 +1316,7 @@ class AIWebSummary {
     a.click();
     URL.revokeObjectURL(url);
 
-    this.showButtonFeedback('exportBtn', '✅ 已导出');
+    this.showButtonFeedback('exportBtn', chrome.i18n.getMessage('exportedFeedback'));
   }
 
   formatSummaryForCopy(summary) {
@@ -1401,7 +1411,7 @@ class AIWebSummary {
     const container = document.getElementById('historyList');
 
     if (history.length === 0) {
-      container.innerHTML = '<p class="empty-state">暂无历史记录</p>';
+      container.innerHTML = `<p class="empty-state">${chrome.i18n.getMessage('historyEmpty')}</p>`;
       return;
     }
 
@@ -1438,7 +1448,7 @@ class AIWebSummary {
   }
 
   async clearHistory() {
-    if (confirm('确定要清空所有历史记录吗？')) {
+    if (confirm(chrome.i18n.getMessage('historyClearConfirm'))) {
       await chrome.storage.local.set({ history: [] });
       await this.loadHistory();
     }
@@ -1448,10 +1458,10 @@ class AIWebSummary {
     const now = Date.now();
     const diff = now - timestamp;
 
-    if (diff < 60000) return '刚刚';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)} 分钟前`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)} 小时前`;
-    return new Date(timestamp).toLocaleDateString('zh-CN');
+    if (diff < 60000) return chrome.i18n.getMessage('historyTimeJustNow');
+    if (diff < 3600000) return chrome.i18n.getMessage('historyTimeMinutesAgo', [String(Math.floor(diff / 60000))]);
+    if (diff < 86400000) return chrome.i18n.getMessage('historyTimeHoursAgo', [String(Math.floor(diff / 3600000))]);
+    return new Date(timestamp).toLocaleDateString();
   }
 
   escapeHtml(text) {

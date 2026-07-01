@@ -1,0 +1,140 @@
+{
+  "extName": {
+    "message": "Shandu - AI Webpage Summary · Free · DeepSeek"
+  },
+  "extShortName": {
+    "message": "Shandu"
+  },
+  "extDescription": {
+    "message": "Summarize any webpage with AI in 3 seconds. Supports DeepSeek, Qwen, Kimi, ChatGPT, Claude. 4 summary modes + 6-language translation. Free, no API key needed."
+  },
+
+  "onboardingTitle": { "message": "Welcome to Shandu" },
+  "onboardingDesc": { "message": "One-click AI summary. Understand any webpage in 3 seconds" },
+  "onboardingStep1Title": { "message": "Zero config, ready to use" },
+  "onboardingStep1Desc": { "message": "No API key needed. Just click to generate summaries" },
+  "onboardingStep2Title": { "message": "4 summary modes" },
+  "onboardingStep2Desc": { "message": "Brief, Detailed, Key Points, Timeline" },
+  "onboardingStep3Title": { "message": "Keyboard shortcuts" },
+  "onboardingStep3Desc": { "message": "Ctrl+Shift+S to open, Ctrl+Shift+A to summarize" },
+  "onboardingStart": { "message": "Get Started" },
+
+  "modeBrief": { "message": "Brief" },
+  "modeDetailed": { "message": "Detailed" },
+  "modeKeyPoints": { "message": "Key Points" },
+  "modeTimeline": { "message": "Timeline" },
+
+  "generateBtn": { "message": "Generate Summary" },
+  "loadingBtn": { "message": "⏳ Analyzing..." },
+
+  "sectionKeyPoints": { "message": "📌 Key Points" },
+  "sectionKeyData": { "message": "📊 Key Data" },
+  "sectionActions": { "message": "💡 Action Items" },
+
+  "btnCopy": { "message": "📋 Copy" },
+  "btnExport": { "message": "📄 Export" },
+  "btnRegenerate": { "message": "🔄 Regenerate" },
+  "copiedFeedback": { "message": "✅ Copied" },
+  "exportedFeedback": { "message": "✅ Exported" },
+
+  "reviewPrompt": { "message": "Finding Shandu helpful? Leave a review to support us" },
+  "reviewGoBtn": { "message": "Review" },
+  "reviewDismissBtn": { "message": "Later" },
+
+  "translateTo": { "message": "Translate to" },
+  "langZh": { "message": "中文" },
+  "langEn": { "message": "English" },
+  "langJa": { "message": "日本語" },
+  "langKo": { "message": "한국어" },
+  "langFr": { "message": "Français" },
+  "langDe": { "message": "Deutsch" },
+  "translateBtn": { "message": "🌐 Translate Summary" },
+  "translatingBtn": { "message": "⏳ Translating..." },
+  "translatedPrefix": { "message": "🌐 $1 Translation" },
+  "toggleShowOriginal": { "message": "Show Original" },
+  "toggleShowTranslation": { "message": "Show Translation" },
+
+  "headerHistory": { "message": "History" },
+  "headerSettings": { "message": "Settings" },
+  "headerUpgradePro": { "message": "Upgrade to Pro" },
+  "headerBack": { "message": "Back" },
+  "headerClearHistory": { "message": "Clear history" },
+  "headerProBadge": { "message": "Upgrade to Pro" },
+
+  "usageFreeMode": { "message": "Free: $1/$2" },
+  "usageToday": { "message": "Today: $1/$2" },
+  "usageProUnlimited": { "message": "Pro · Unlimited" },
+
+  "historyEmpty": { "message": "No history yet" },
+  "historyClearConfirm": { "message": "Clear all history?" },
+  "historyTimeJustNow": { "message": "Just now" },
+  "historyTimeMinutesAgo": { "message": "$1 min ago" },
+  "historyTimeHoursAgo": { "message": "$1 h ago" },
+  "historyTranslateResult": { "message": "Translation" },
+
+  "settingsApiKey": { "message": "API Key" },
+  "settingsApiKeyHint": { "message": "Supports OpenAI / Claude / DeepSeek and more" },
+  "settingsApiProvider": { "message": "API Provider" },
+  "settingsSummaryLang": { "message": "Summary Language" },
+  "settingsLangAuto": { "message": "Auto Detect" },
+  "settingsSave": { "message": "Save Settings" },
+  "settingsHelpTitle": { "message": "How to get an API Key? ▼" },
+  "settingsHelpTitleOpen": { "message": "How to get an API Key? ▲" },
+  "settingsHelpFree": { "message": "Sign up bonus credits included" },
+  "settingsHelpPayg": { "message": "Pay-as-you-go, low barrier" },
+
+  "providerGroupCN": { "message": "Free CN Models" },
+  "providerGroupGlobal": { "message": "Global Models" },
+  "providerDeepSeek": { "message": "DeepSeek (Recommended)" },
+  "providerQwen": { "message": "Qwen (Alibaba)" },
+  "providerGLM": { "message": "Zhipu GLM-4" },
+  "providerKimi": { "message": "Kimi (Moonshot)" },
+  "providerYi": { "message": "Yi (01.AI)" },
+  "providerOpenAI": { "message": "OpenAI (GPT-4o)" },
+  "providerOpenAI35": { "message": "OpenAI (GPT-3.5)" },
+  "providerClaude": { "message": "Claude" },
+
+  "proViewTitle": { "message": "Upgrade to Pro" },
+  "proHeroIcon": { "message": "PRO" },
+  "proHeroTitle": { "message": "Unlock All Features" },
+  "proHeroPrice": { "message": "¥9.9" },
+  "proHeroPriceNote": { "message": "Limited offer · Was ¥49" },
+
+  "proFeatureUnlimited": { "message": "Unlimited summaries" },
+  "proFeatureModes": { "message": "4 summary modes (Detailed + Key Points + Timeline)" },
+  "proFeatureTranslate": { "message": "6-language translation" },
+  "proFeatureExport": { "message": "Export to Markdown" },
+  "proFeatureModels": { "message": "All AI models supported" },
+
+  "qrPayTitle": { "message": "Scan to pay ¥9.9" },
+  "qrAlipay": { "message": "Alipay" },
+  "qrWechat": { "message": "WeChat Pay" },
+
+  "contactTitle": { "message": "Add WeChat after payment to get your activation code instantly" },
+  "contactWechatLabel": { "message": "WeChat ID:" },
+  "contactCopyBtn": { "message": "Copy" },
+  "contactCopied": { "message": "Copied" },
+  "contactTip": { "message": "Mention \"Shandu Pro\" when adding, send the payment screenshot" },
+
+  "proInputDivider": { "message": "Enter activation code" },
+  "proActivateBtn": { "message": "Activate Pro" },
+  "proVerifyingBtn": { "message": "Verifying..." },
+  "proPlaceholderDefault": { "message": "SD-XXXX-XXXX-XXXX" },
+  "proPlaceholderEmpty": { "message": "Please enter activation code" },
+  "proPlaceholderInvalidFormat": { "message": "Format: SD-XXXX-XXXX-XXXX" },
+  "proPlaceholderInvalid": { "message": "Invalid code, please re-enter" },
+  "proPlaceholderUsed": { "message": "Code already used" },
+
+  "footerReady": { "message": "⚡ Ready | Shortcut: Ctrl+Shift+S" },
+  "footerFreeMode": { "message": "⚡ Free mode · No setup needed | Shortcut: Ctrl+Shift+S" },
+
+  "errorUsageLimit": { "message": "Used $1 today, free plan limit is $2/day. Upgrade to Pro for unlimited use." },
+  "errorProxyLimit": { "message": "Today's free quota is used up ($1 times). Upgrade to Pro for unlimited use." },
+  "errorTranslateNoKey": { "message": "Translation requires an API Key. Please add one in Settings." },
+  "errorTranslateFailed": { "message": "Translation failed: $1" },
+  "errorPageUnsupported": { "message": "This page is not supported. Please use on a regular webpage" },
+  "errorNoContent": { "message": "Unable to get page content" },
+  "errorTimeout": { "message": "Request timed out. AI service is slow, please try again later." },
+  "errorGeneric": { "message": "Failed to generate summary, please retry" },
+  "errorUnsupportedProvider": { "message": "Unsupported API provider" }
+}

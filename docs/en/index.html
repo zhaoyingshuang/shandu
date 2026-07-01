@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>闪读 - AI 网页摘要插件 | 3秒看懂任何网页</title>
-  <meta name="description" content="闪读是一款Chrome浏览器插件，一键用AI总结网页内容，3秒获取核心观点。支持DeepSeek、通义千问等国内免费模型。">
+  <title>Shandu - AI Webpage Summary Chrome Extension | Read Any Page in 3 Seconds</title>
+  <meta name="description" content="Shandu is a free Chrome extension that summarizes any webpage with AI in 3 seconds. Supports DeepSeek, OpenAI, Claude, Qwen, Kimi, GLM, and Yi. 4 modes, 6-language translation.">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,14 +20,14 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== 导航 ===== */
+    /* ===== Nav ===== */
     nav {
       position: fixed;
       top: 0;
@@ -140,10 +140,10 @@
     .hero-badge span { color: var(--accent); font-weight: 600; }
 
     .hero h1 {
-      font-size: 64px;
+      font-size: 72px;
       font-weight: 800;
       letter-spacing: -2px;
-      line-height: 1.1;
+      line-height: 1.05;
       margin-bottom: 24px;
       background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
       -webkit-background-clip: text;
@@ -154,7 +154,7 @@
     .hero p {
       font-size: 20px;
       color: var(--text2);
-      max-width: 560px;
+      max-width: 620px;
       margin-bottom: 40px;
     }
 
@@ -175,7 +175,7 @@
       margin-bottom: 4px;
     }
 
-    /* ===== 功能 ===== */
+    /* ===== Features ===== */
     .features {
       padding: 100px 24px;
       max-width: 1000px;
@@ -242,7 +242,7 @@
       line-height: 1.6;
     }
 
-    /* ===== 截图预览 ===== */
+    /* ===== Preview ===== */
     .preview {
       padding: 80px 24px;
       text-align: center;
@@ -289,15 +289,6 @@
       margin-bottom: 12px;
     }
 
-    .mockup-line {
-      height: 8px;
-      background: rgba(100, 100, 160, 0.15);
-      border-radius: 4px;
-      margin-bottom: 8px;
-    }
-
-    .mockup-line:last-child { width: 60%; }
-
     .mockup-point {
       display: flex;
       align-items: flex-start;
@@ -320,7 +311,42 @@
       line-height: 1.5;
     }
 
-    /* ===== 定价 ===== */
+    /* ===== Models ===== */
+    .models {
+      padding: 100px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 50px;
+    }
+
+    .model-tile {
+      padding: 18px 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+    }
+
+    .model-tile .name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .model-tile .meta {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+
+    /* ===== Pricing ===== */
     .pricing {
       padding: 100px 24px;
       max-width: 800px;
@@ -348,16 +374,17 @@
     }
 
     .pricing-card.popular::before {
-      content: '推荐';
+      content: 'COMING SOON';
       position: absolute;
       top: -10px;
       right: 20px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: #fff;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
       padding: 4px 12px;
       border-radius: 6px;
+      letter-spacing: 1px;
     }
 
     .pricing-card h3 {
@@ -448,13 +475,14 @@
 
     footer a:hover { color: var(--accent); }
 
-    /* ===== 响应式 ===== */
+    /* ===== Responsive ===== */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 40px; }
+      .hero h1 { font-size: 44px; }
       .hero p { font-size: 16px; }
       .hero-buttons { flex-direction: column; }
       .hero-stats { gap: 24px; }
       .feature-grid { grid-template-columns: 1fr; }
+      .model-grid { grid-template-columns: repeat(2, 1fr); }
       .pricing-grid { grid-template-columns: 1fr; }
       .nav-links { display: none; }
     }
@@ -462,78 +490,120 @@
 </head>
 <body>
 
-  <!-- 导航 -->
+  <!-- Nav -->
   <nav>
-    <div class="nav-logo">闪读</div>
+    <div class="nav-logo">Shandu</div>
     <div class="nav-links">
-      <a href="#features">功能</a>
-      <a href="#pricing">定价</a>
-      <a href="#faq">常见问题</a>
-      <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank" class="btn btn-primary">安装插件</a>
+      <a href="#features">Features</a>
+      <a href="#models">AI Models</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank" class="btn btn-primary">Add to Chrome</a>
     </div>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-badge">v1.2 · 支持 DeepSeek / 通义千问 / Kimi 等</div>
-    <h1>3秒看懂<br>任何网页</h1>
-    <p>闪读是一款 Chrome 插件，一键用 AI 总结网页内容。4种摘要模式，6种语言翻译，用国内免费模型，无需翻墙。</p>
+    <div class="hero-badge">⚡ v1.4 · Supports DeepSeek, OpenAI, Claude, Qwen & more</div>
+    <h1>Summarize any<br>webpage in 3 seconds</h1>
+    <p>Shandu is a free Chrome extension that uses AI to extract the core ideas from any webpage. Four summary modes, six-language translation, and works with multiple AI models — no API key required to start.</p>
     <div class="hero-buttons">
       <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank" class="btn btn-primary">
         <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1v10M4 7l4 4 4-4M2 13h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        免费安装
+        Add to Chrome — Free
       </a>
-      <a href="#features" class="btn btn-outline">了解功能</a>
+      <a href="#features" class="btn btn-outline">See Features</a>
     </div>
     <div class="hero-stats">
-      <div><strong>4</strong>种摘要模式</div>
-      <div><strong>6</strong>种语言翻译</div>
-      <div><strong>5+</strong>国内免费模型</div>
+      <div><strong>4</strong>Summary modes</div>
+      <div><strong>6</strong>Languages</div>
+      <div><strong>7</strong>AI models</div>
     </div>
   </section>
 
-  <!-- 功能 -->
+  <!-- Features -->
   <section class="features" id="features">
-    <div class="section-label">功能特性</div>
-    <h2 class="section-title">你需要的一切，都在这里</h2>
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need to read faster</h2>
     <div class="feature-grid">
       <div class="feature-card">
         <div class="feature-icon">⚡</div>
-        <h3>4种摘要模式</h3>
-        <p>简速浏览、深度分析、要点提取、时间线梳理，按需选择最适合的模式。</p>
+        <h3>4 Summary Modes</h3>
+        <p>Brief, Detailed, Key Points, and Timeline. Pick the right depth for any content.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🌐</div>
-        <h3>多语言翻译</h3>
-        <p>支持中、英、日、韩、法、德 6 种语言，摘要结果一键翻译。</p>
+        <h3>6-Language Translation</h3>
+        <p>Translate summaries to English, Chinese, Japanese, Korean, French, or German.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🇨🇳</div>
-        <h3>国内免费模型</h3>
-        <p>内置 DeepSeek、通义千问、智谱、Kimi、零一万物，免费额度充足。</p>
+        <div class="feature-icon">🤖</div>
+        <h3>Multiple AI Models</h3>
+        <p>Bring your own API key for OpenAI, Claude, or use DeepSeek, Qwen, Kimi, GLM, Yi.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">⌨️</div>
-        <h3>快捷键操作</h3>
-        <p>Ctrl+Shift+S 一键唤起，右键菜单快速摘要选中文字，不打断阅读。</p>
+        <h3>Keyboard Shortcuts</h3>
+        <p>Ctrl+Shift+S to open, Ctrl+Shift+A to summarize. Right-click selected text for quick actions.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📜</div>
-        <h3>历史记录</h3>
-        <p>自动保存最近 20 条摘要，随时回看，支持导出为 Markdown。</p>
+        <h3>History & Export</h3>
+        <p>Saves your last 20 summaries. Export any summary as Markdown for your notes.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🔒</div>
-        <h3>隐私安全</h3>
-        <p>API Key 本地存储，数据不经过任何第三方服务器，完全掌控在自己手中。</p>
+        <h3>Privacy First</h3>
+        <p>API keys stay in your browser. Calls go directly to the AI provider. No middleman, no tracking.</p>
       </div>
     </div>
   </section>
 
-  <!-- 预览 -->
-  <section class="preview" id="install">
-    <div class="section-label">产品预览</div>
-    <h2 class="section-title">简洁优雅，开箱即用</h2>
+  <!-- AI Models -->
+  <section class="models" id="models">
+    <div class="section-label">Supported Models</div>
+    <h2 class="section-title">Bring your own AI</h2>
+    <p style="color: var(--text2); max-width: 600px; margin: 0 auto;">Use the built-in free proxy to start instantly, or bring your own API key from any of these providers.</p>
+    <div class="model-grid">
+      <div class="model-tile">
+        <div class="name">DeepSeek</div>
+        <div class="meta">Recommended · Free tier</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">OpenAI GPT-4o</div>
+        <div class="meta">Best overall quality</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">Claude</div>
+        <div class="meta">Great for analysis</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">Qwen (Alibaba)</div>
+        <div class="meta">Free tier available</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">Kimi (Moonshot)</div>
+        <div class="meta">Long context</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">Zhipu GLM-4</div>
+        <div class="meta">Free model built-in</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">Yi (01.AI)</div>
+        <div class="meta">Pay-as-you-go</div>
+      </div>
+      <div class="model-tile">
+        <div class="name">+ More</div>
+        <div class="meta">OpenAI-compatible APIs</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview -->
+  <section class="preview">
+    <div class="section-label">Preview</div>
+    <h2 class="section-title">Clean UI, instant results</h2>
     <div class="preview-mockup">
       <div class="mockup-header">
         <div class="mockup-dot"></div>
@@ -541,89 +611,93 @@
         <div class="mockup-dot"></div>
       </div>
       <div class="mockup-content">
-        <div class="mockup-title">📌 核心观点</div>
+        <div class="mockup-title">📌 Key Points</div>
         <div class="mockup-point">
           <div class="mockup-bullet"></div>
-          <div class="mockup-text">该研究提出了一种新的注意力机制，在保持模型性能的同时将计算成本降低了40%</div>
+          <div class="mockup-text">The paper introduces a novel attention mechanism that reduces compute cost by 40% while maintaining model performance.</div>
         </div>
         <div class="mockup-point">
           <div class="mockup-bullet"></div>
-          <div class="mockup-text">实验结果显示，在标准基准测试中，新方法达到了 SOTA 水平</div>
+          <div class="mockup-text">Experiments show the new method achieves state-of-the-art results on standard benchmarks.</div>
         </div>
         <div class="mockup-point">
           <div class="mockup-bullet"></div>
-          <div class="mockup-text">作者建议未来可以将该方法扩展到多模态任务中</div>
+          <div class="mockup-text">Authors suggest extending the approach to multimodal tasks in future work.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 定价 -->
+  <!-- Pricing -->
   <section class="pricing" id="pricing">
-    <div class="section-label">定价方案</div>
-    <h2 class="section-title">限时优惠，一次买断永久使用</h2>
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Free forever. Pro coming soon.</h2>
     <div class="pricing-grid">
       <div class="pricing-card">
-        <h3>免费版</h3>
-        <p class="pricing-desc">体验核心功能</p>
-        <div class="pricing-price">¥0</div>
-        <div class="pricing-note">永久免费</div>
+        <h3>Free</h3>
+        <p class="pricing-desc">Start using Shandu today</p>
+        <div class="pricing-price">$0</div>
+        <div class="pricing-note">Free forever, no credit card</div>
         <ul class="pricing-features">
-          <li>每天 3 次摘要</li>
-          <li>1 种摘要模式</li>
-          <li>国内免费模型</li>
-          <li>历史记录</li>
+          <li>3 summaries per day</li>
+          <li>Brief mode</li>
+          <li>Built-in free proxy</li>
+          <li>History & copy</li>
+          <li>All AI models supported</li>
         </ul>
-        <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;">免费开始</a>
+        <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;">Add to Chrome</a>
       </div>
       <div class="pricing-card popular">
-        <h3>Pro 专业版</h3>
-        <p class="pricing-desc">解锁全部功能</p>
-        <div class="pricing-price">¥9.9 <span>/永久</span></div>
-        <div class="pricing-note">限时优惠 · 原价 ¥49 · 一次买断永久使用</div>
+        <h3>Pro</h3>
+        <p class="pricing-desc">For power users</p>
+        <div class="pricing-price">$2.99 <span>one-time</span></div>
+        <div class="pricing-note">International payment integration in progress</div>
         <ul class="pricing-features">
-          <li>无限次摘要</li>
-          <li>4 种摘要模式（详细分析 + 要点 + 时间线）</li>
-          <li>6 种语言翻译</li>
-          <li>所有 AI 模型</li>
-          <li>导出 Markdown</li>
-          <li>优先技术支持</li>
+          <li>Unlimited summaries</li>
+          <li>All 4 modes (Detailed, Key Points, Timeline)</li>
+          <li>6-language translation</li>
+          <li>Export to Markdown</li>
+          <li>Priority support</li>
         </ul>
-        <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank" class="btn btn-primary" style="width:100%;justify-content:center;">安装插件后升级 Pro</a>
+        <a href="mailto:hello@shandu.app?subject=Pro Early Access" class="btn btn-outline" style="width:100%;justify-content:center;">Get notified at launch</a>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
   <section class="faq" id="faq">
-    <div class="section-label">常见问题</div>
-    <h2 class="section-title">有问题？看这里</h2>
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Common questions</h2>
     <div class="faq-item">
-      <div class="faq-q">需要翻墙吗？</div>
-      <div class="faq-a">不需要。闪读支持 DeepSeek、通义千问、智谱、Kimi、零一万物等国内模型，注册即可使用。当然也支持 OpenAI 和 Claude。</div>
+      <div class="faq-q">Do I need an API key?</div>
+      <div class="faq-a">No. Shandu ships with a built-in free proxy that lets you start summarizing immediately. If you want unlimited use or a specific model, you can add your own API key in settings.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">API Key 安全吗？</div>
-      <div class="faq-a">绝对安全。API Key 只保存在你浏览器的本地存储中，不会上传到任何服务器。所有 API 调用都是直接从你的浏览器发出。</div>
+      <div class="faq-q">Is my data private?</div>
+      <div class="faq-a">Yes. Your API keys are stored only in your browser's local storage. AI calls go directly from your browser to the provider you choose. Shandu does not collect or transmit any user data.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">为什么要升级 Pro？</div>
-      <div class="faq-a">免费版每天仅限 3 次摘要，且只能使用简速浏览模式。Pro 版解锁无限次摘要、全部 4 种摘要模式（详细分析、要点提取、时间线）、6 种语言翻译、导出 Markdown 等高级功能，一次买断永久使用。</div>
+      <div class="faq-q">Which AI models are supported?</div>
+      <div class="faq-a">OpenAI (GPT-4o, GPT-3.5), Anthropic Claude, DeepSeek, Alibaba Qwen, Zhipu GLM-4, Moonshot Kimi, and 01.AI Yi. Most OpenAI-compatible APIs work too.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">Pro 版和免费版有什么区别？</div>
-      <div class="faq-a">Pro 版解锁无限次摘要、全部 4 种摘要模式（详细分析、要点提取、时间线）、6 种语言翻译、导出 Markdown 等高级功能。免费版每天限 3 次，仅支持简速浏览模式。</div>
+      <div class="faq-q">Why use Shandu instead of just ChatGPT?</div>
+      <div class="faq-a">ChatGPT requires copy/paste and switching tabs. Shandu gives you a summary with one click directly from any webpage, with structured output (key points, data, action items) instead of free-form text. For power users who keep ChatGPT open all day, the value is mainly speed and structure.</div>
     </div>
     <div class="faq-item">
-      <div class="faq-q">支持哪些浏览器？</div>
-      <div class="faq-a">目前支持 Chrome 浏览器。Edge 用户也可以安装（基于 Chromium）。后续会考虑 Firefox 支持。</div>
+      <div class="faq-q">Which browsers are supported?</div>
+      <div class="faq-a">Chrome and any Chromium-based browser (Edge, Brave, Arc). Firefox support is on the roadmap.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I get Pro?</div>
+      <div class="faq-a">International payments are being set up via LemonSqueezy. Email <a href="mailto:hello@shandu.app" style="color: var(--accent);">hello@shandu.app</a> with subject "Pro Early Access" to be notified when it's ready — early users get a discount.</div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>© 2026 闪读 · 用 AI 让阅读更高效</p>
-    <p style="margin-top:8px;"><a href="mailto:hello@shandu.app">联系我们</a> · <a href="#">隐私政策</a></p>
+    <p>© 2026 Shandu · Built by an indie developer</p>
+    <p style="margin-top:8px;"><a href="mailto:hello@shandu.app">Contact</a> · <a href="https://chromewebstore.google.com/detail/hlkacennbhbfabbgcofeihnlmjinjcfc" target="_blank">Chrome Web Store</a></p>
   </footer>
 
 </body>

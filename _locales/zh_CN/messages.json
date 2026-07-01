@@ -1,0 +1,140 @@
+{
+  "extName": {
+    "message": "闪读 - AI网页摘要插件 · 免费网页总结 · 支持DeepSeek"
+  },
+  "extShortName": {
+    "message": "闪读"
+  },
+  "extDescription": {
+    "message": "一键AI总结网页内容，3秒看懂任何文章。支持DeepSeek/通义千问/Kimi/智谱等国内免费模型，无需翻墙。适合读论文、新闻、长文、英文文档，4种摘要模式+6种语言翻译。"
+  },
+
+  "onboardingTitle": { "message": "欢迎使用闪读" },
+  "onboardingDesc": { "message": "一键 AI 摘要，3 秒看懂任何网页" },
+  "onboardingStep1Title": { "message": "零配置开箱即用" },
+  "onboardingStep1Desc": { "message": "无需填写 API Key，直接点击生成摘要" },
+  "onboardingStep2Title": { "message": "4 种摘要模式" },
+  "onboardingStep2Desc": { "message": "简短、详细、要点、时间线，按需选择" },
+  "onboardingStep3Title": { "message": "快捷键操作" },
+  "onboardingStep3Desc": { "message": "Ctrl+Shift+S 打开，Ctrl+Shift+A 快速摘要" },
+  "onboardingStart": { "message": "开始使用" },
+
+  "modeBrief": { "message": "简短" },
+  "modeDetailed": { "message": "详细" },
+  "modeKeyPoints": { "message": "要点" },
+  "modeTimeline": { "message": "时间线" },
+
+  "generateBtn": { "message": "生成摘要" },
+  "loadingBtn": { "message": "⏳ 分析中..." },
+
+  "sectionKeyPoints": { "message": "📌 核心观点" },
+  "sectionKeyData": { "message": "📊 关键数据" },
+  "sectionActions": { "message": "💡 行动建议" },
+
+  "btnCopy": { "message": "📋 复制" },
+  "btnExport": { "message": "📄 导出" },
+  "btnRegenerate": { "message": "🔄 重新生成" },
+  "copiedFeedback": { "message": "✅ 已复制" },
+  "exportedFeedback": { "message": "✅ 已导出" },
+
+  "reviewPrompt": { "message": "闪读对你有帮助？给个好评支持一下吧" },
+  "reviewGoBtn": { "message": "去评价" },
+  "reviewDismissBtn": { "message": "以后再说" },
+
+  "translateTo": { "message": "翻译为" },
+  "langZh": { "message": "中文" },
+  "langEn": { "message": "English" },
+  "langJa": { "message": "日本語" },
+  "langKo": { "message": "한국어" },
+  "langFr": { "message": "Français" },
+  "langDe": { "message": "Deutsch" },
+  "translateBtn": { "message": "🌐 翻译摘要" },
+  "translatingBtn": { "message": "⏳ 翻译中..." },
+  "translatedPrefix": { "message": "🌐 $1 译文" },
+  "toggleShowOriginal": { "message": "查看原文" },
+  "toggleShowTranslation": { "message": "查看译文" },
+
+  "headerHistory": { "message": "历史记录" },
+  "headerSettings": { "message": "设置" },
+  "headerUpgradePro": { "message": "升级 Pro" },
+  "headerBack": { "message": "返回" },
+  "headerClearHistory": { "message": "清空历史" },
+  "headerProBadge": { "message": "升级 Pro" },
+
+  "usageFreeMode": { "message": "免费模式: $1/$2" },
+  "usageToday": { "message": "今日剩余: $1/$2" },
+  "usageProUnlimited": { "message": "Pro · 无限使用" },
+
+  "historyEmpty": { "message": "暂无历史记录" },
+  "historyClearConfirm": { "message": "确定要清空所有历史记录吗？" },
+  "historyTimeJustNow": { "message": "刚刚" },
+  "historyTimeMinutesAgo": { "message": "$1 分钟前" },
+  "historyTimeHoursAgo": { "message": "$1 小时前" },
+  "historyTranslateResult": { "message": "翻译结果" },
+
+  "settingsApiKey": { "message": "API Key" },
+  "settingsApiKeyHint": { "message": "支持 OpenAI / Claude / DeepSeek 等 API Key" },
+  "settingsApiProvider": { "message": "API 提供商" },
+  "settingsSummaryLang": { "message": "摘要语言" },
+  "settingsLangAuto": { "message": "自动检测" },
+  "settingsSave": { "message": "保存设置" },
+  "settingsHelpTitle": { "message": "如何获取 API Key？ ▼" },
+  "settingsHelpTitleOpen": { "message": "如何获取 API Key？ ▲" },
+  "settingsHelpFree": { "message": "注册即送体验额度" },
+  "settingsHelpPayg": { "message": "按量付费，低门槛" },
+
+  "providerGroupCN": { "message": "国内免费模型" },
+  "providerGroupGlobal": { "message": "海外模型" },
+  "providerDeepSeek": { "message": "DeepSeek (推荐)" },
+  "providerQwen": { "message": "通义千问 (阿里)" },
+  "providerGLM": { "message": "智谱 GLM-4" },
+  "providerKimi": { "message": "Kimi (月之暗面)" },
+  "providerYi": { "message": "零一万物 (Yi)" },
+  "providerOpenAI": { "message": "OpenAI (GPT-4o)" },
+  "providerOpenAI35": { "message": "OpenAI (GPT-3.5)" },
+  "providerClaude": { "message": "Claude" },
+
+  "proViewTitle": { "message": "升级 Pro" },
+  "proHeroIcon": { "message": "PRO" },
+  "proHeroTitle": { "message": "解锁全部功能" },
+  "proHeroPrice": { "message": "¥9.9" },
+  "proHeroPriceNote": { "message": "限时优惠 · 原价 ¥49" },
+
+  "proFeatureUnlimited": { "message": "无限次摘要" },
+  "proFeatureModes": { "message": "4 种摘要模式（详细 + 要点 + 时间线）" },
+  "proFeatureTranslate": { "message": "6 种语言翻译" },
+  "proFeatureExport": { "message": "导出 Markdown" },
+  "proFeatureModels": { "message": "所有 AI 模型支持" },
+
+  "qrPayTitle": { "message": "扫码支付 ¥9.9" },
+  "qrAlipay": { "message": "支付宝" },
+  "qrWechat": { "message": "微信支付" },
+
+  "contactTitle": { "message": "付款后加微信，即刻获取激活码" },
+  "contactWechatLabel": { "message": "微信号：" },
+  "contactCopyBtn": { "message": "复制" },
+  "contactCopied": { "message": "已复制" },
+  "contactTip": { "message": "加微信时备注「闪读Pro」，发支付截图即可" },
+
+  "proInputDivider": { "message": "输入激活码" },
+  "proActivateBtn": { "message": "激活 Pro" },
+  "proVerifyingBtn": { "message": "验证中..." },
+  "proPlaceholderDefault": { "message": "SD-XXXX-XXXX-XXXX" },
+  "proPlaceholderEmpty": { "message": "请输入激活码" },
+  "proPlaceholderInvalidFormat": { "message": "格式: SD-XXXX-XXXX-XXXX" },
+  "proPlaceholderInvalid": { "message": "激活码无效，请重新输入" },
+  "proPlaceholderUsed": { "message": "激活码已被使用" },
+
+  "footerReady": { "message": "⚡ 准备就绪 | 快捷键: Ctrl+Shift+S" },
+  "footerFreeMode": { "message": "⚡ 免费模式 · 无需配置 | 快捷键: Ctrl+Shift+S" },
+
+  "errorUsageLimit": { "message": "今日已用 $1 次，免费版每日限 $2 次。升级 Pro 解锁无限使用。" },
+  "errorProxyLimit": { "message": "今日免费额度已用完（$1 次）。升级 Pro 解锁无限使用。" },
+  "errorTranslateNoKey": { "message": "翻译功能需要配置 API Key，请在设置中添加。" },
+  "errorTranslateFailed": { "message": "翻译失败: $1" },
+  "errorPageUnsupported": { "message": "当前页面不支持摘要，请在一个普通网页上使用" },
+  "errorNoContent": { "message": "无法获取页面内容" },
+  "errorTimeout": { "message": "请求超时，AI 服务响应较慢，请稍后重试。" },
+  "errorGeneric": { "message": "生成摘要失败，请重试" },
+  "errorUnsupportedProvider": { "message": "不支持的 API 提供商" }
+}
